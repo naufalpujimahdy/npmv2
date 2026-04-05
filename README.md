@@ -1,37 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# npmv2
 
-## Getting Started
+Monorepo sederhana dengan dua app:
 
-First, run the development server:
+- `apps/backend`: Next App Router untuk API backend di port `3000`
+- `apps/frontend`: Next App Router untuk UI frontend di port `3001`
+
+## Struktur
+
+Best practice untuk struktur ini adalah:
+
+- root repo dipakai sebagai workspace manager
+- `app/` hanya ada di package yang benar-benar merupakan Next app
+- karena itu, `app/*` di root memang tidak perlu dikembalikan
+- App Router yang aktif ada di `apps/backend/app` dan `apps/frontend/app`
+
+## Menjalankan project
+
+Install dependency workspace:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Siapkan environment variable:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp apps/backend/.env.example apps/backend/.env
+cp apps/frontend/.env.example apps/frontend/.env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Isi minimal:
 
-## Learn More
+```env
+# apps/backend/.env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/npmv2
+JWT_SECRET=change-me
+```
 
-To learn more about Next.js, take a look at the following resources:
+```env
+# apps/frontend/.env.local
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Jalankan backend dan frontend di terminal terpisah:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm dev:backend
+pnpm dev:frontend
+```
 
-## Deploy on Vercel
+Lalu buka:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# npmv2
+- Frontend: `http://localhost:3001`
+- Backend health check: `http://localhost:3000/api/health`

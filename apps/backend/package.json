@@ -1,1 +1,31 @@
-{\n  "name": "backend",\n  "version": "1.0.0",\n  "main": "index.js",\n  "scripts": {\n    "dev": "next dev",\n    "build": "next build",\n    "start": "next start"\n  },\n  "dependencies": {\n    "next": "latest",\n    "prisma": "latest",\n    "jsonwebtoken": "latest",\n    "pg": "latest",\n    "@prisma/client": "latest"\n  }\n}
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000",
+    "lint": "eslint .",
+    "postinstall": "prisma generate --schema prisma/schema.prisma",
+    "prisma:generate": "prisma generate --schema prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "next": "16.2.2",
+    "pg": "^8.16.3",
+    "prisma": "^6.7.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.19.39",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "16.2.2",
+    "typescript": "^5.9.3"
+  }
+}

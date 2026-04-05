@@ -1,6 +1,12 @@
-// This file defines the schema for the Prisma ORM.
+generator client {
+  provider = "prisma-client-js"
+}
 
-// @model User
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique

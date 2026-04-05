@@ -1,40 +1,29 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import type { Prisma, User } from '@prisma/client';
+import prisma from '../lib/prisma';
 
-// Define the user interface
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-}
+export type CreateUserInput = Prisma.UserCreateInput;
+export type UpdateUserInput = Prisma.UserUpdateInput;
+export type UserRecord = User;
 
-// Create the user schema
-const UserSchema: Schema<IUser> = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-}, { timestamps: true });
-
-// Create the user model
-const User: Model<IUser> = mongoose.model<IUser>('User', UserSchema);
-
-// CRUD operations
-export const createUser = async (userData: IUser) => {
-  const user = new User(userData);
-  return await user.save();
+export const createUser = async (userData: CreateUserInput) => {
+  return prisma.user.create({ data: userData });
 };
 
 export const getUserById = async (id: string) => {
-  return await User.findById(id);
+  return prisma.user.findUnique({ where: { id: Number(id) } });
 };
 
 export const getAllUsers = async () => {
-  return await User.find();
+  return prisma.user.findMany({ orderBy: { createdAt: 'desc' } });
 };
 
-export const updateUser = async (id: string, userData: Partial<IUser>) => {
-  return await User.findByIdAndUpdate(id, userData, { new: true });
+export const updateUser = async (id: string, userData: UpdateUserInput) => {
+  return prisma.user.update({
+    where: { id: Number(id) },
+    data: userData,
+  });
 };
 
 export const deleteUser = async (id: string) => {
-  return await User.findByIdAndDelete(id);
+  return prisma.user.delete({ where: { id: Number(id) } });
 };
