@@ -96,6 +96,18 @@ export default function Home() {
           >
             Cek backend health
           </a>
+          <a
+            href="/cms/login"
+            style={{
+              padding: '12px 18px',
+              borderRadius: '999px',
+              border: '1px solid rgba(47, 107, 79, 0.22)',
+              color: colors.accent,
+              fontWeight: 700,
+            }}
+          >
+            Buka login CMS
+          </a>
         </div>
       </section>
     </main>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'npmv2 Frontend',
@@ -13,15 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        style={{
-          margin: 0,
-          minHeight: '100vh',
-          background:
-            'radial-gradient(circle at top, rgba(47, 107, 79, 0.18), transparent 32%), linear-gradient(180deg, #f8f4eb 0%, #efe4d3 100%)',
-          color: '#1e2a23',
-          fontFamily:
-            'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-        }}
+        className="min-h-screen bg-transparent text-[var(--foreground)]"
       >
         {children}
       </body>
