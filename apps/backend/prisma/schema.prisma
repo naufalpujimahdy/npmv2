@@ -7,6 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ContentType {
+  PAGE
+  SECTION
+  PROJECT
+  EXPERIENCE
+  POST
+  SOCIAL
+  LINK
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
@@ -14,4 +30,35 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ContentEntry {
+  id            Int           @id @default(autoincrement())
+  type          ContentType
+  status        ContentStatus @default(DRAFT)
+  slug          String        @unique
+  title         String
+  summary       String?
+  body          String?
+  locale        String        @default("id")
+  section       String?
+  coverImageUrl String?
+  sortOrder     Int           @default(0)
+  metadata      Json?
+  publishedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([type, status])
+  @@index([section, status])
+  @@index([locale, status])
+}
+
+model SiteSetting {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  value       Json
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

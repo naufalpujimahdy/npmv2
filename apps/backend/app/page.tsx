@@ -23,19 +23,48 @@ export default function BackendHomePage() {
       </p>
       <h1>Service backend berjalan di Next App Router.</h1>
       <p style={{ color: '#cbd5e1', lineHeight: 1.7 }}>
-        Gunakan endpoint health check untuk memastikan server aktif, lalu
-        lanjutkan menambahkan route auth, user, atau integrasi database Prisma.
+        Backend ini sekarang disiapkan untuk mengelola konten web personal:
+        halaman, section homepage, project, pengalaman, post, sampai site
+        setting.
       </p>
-      <code
+      <div
         style={{
-          display: 'inline-block',
-          padding: '10px 14px',
-          borderRadius: '999px',
-          background: 'rgba(56, 189, 248, 0.12)',
+          display: 'grid',
+          gap: '12px',
+          marginTop: '20px',
         }}
       >
-        GET /api/health
-      </code>
+        {[
+          'GET /api/health',
+          'GET /api/content',
+          'GET /api/content/slug/:slug',
+          'POST /api/content',
+          'POST /api/auth/register',
+          'POST /api/auth/login',
+          'GET /api/auth/me',
+          'GET /api/settings',
+          'PUT /api/settings',
+        ].map((endpoint) => (
+          <code
+            key={endpoint}
+            style={{
+              display: 'inline-block',
+              padding: '10px 14px',
+              borderRadius: '999px',
+              background: 'rgba(56, 189, 248, 0.12)',
+              width: 'fit-content',
+            }}
+          >
+            {endpoint}
+          </code>
+        ))}
+      </div>
+      <p style={{ color: '#94a3b8', lineHeight: 1.7, marginBottom: 0 }}>
+        Untuk operasi tulis, sertakan header
+        <code style={{ marginLeft: '6px' }}>x-admin-api-key</code>
+        yang cocok dengan
+        <code style={{ marginLeft: '6px' }}>ADMIN_API_KEY</code>.
+      </p>
     </main>
   );
 }

@@ -1,3 +1,4 @@
+import { optionsResponse } from '@/src/lib/api';
 import { NextResponse } from 'next/server';
 
 const hasDatabaseUrl =
@@ -18,4 +19,8 @@ export function GET() {
     },
     timestamp: new Date().toISOString(),
   });
+}
+
+export function OPTIONS() {
+  return optionsResponse();
 }
