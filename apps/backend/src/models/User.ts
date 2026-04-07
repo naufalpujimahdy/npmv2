@@ -17,6 +17,18 @@ export const getAllUsers = async () => {
   return prisma.user.findMany({ orderBy: { createdAt: 'desc' } });
 };
 
+export const getUserByUsername = async (username: string) => {
+  return prisma.user.findUnique({ where: { username } });
+};
+
+export const getUserByEmail = async (email: string) => {
+  return prisma.user.findUnique({ where: { email } });
+};
+
+export const getUserCount = async () => {
+  return prisma.user.count();
+};
+
 export const updateUser = async (id: string, userData: UpdateUserInput) => {
   return prisma.user.update({
     where: { id: Number(id) },
