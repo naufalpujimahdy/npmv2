@@ -33,8 +33,12 @@ Isi minimal:
 
 ```env
 # apps/backend/.env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/npmv2
+# Local MySQL:
+DATABASE_URL=mysql://root:password@localhost:3306/npmv2
 JWT_SECRET=change-me
+
+# Remote MySQL example:
+# DATABASE_URL=mysql://user:pass@host:3306/database_name
 ```
 
 ```env

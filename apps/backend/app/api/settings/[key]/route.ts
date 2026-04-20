@@ -44,7 +44,7 @@ export async function PUT(request: Request, { params }: RouteContext) {
     const data = validateSettingInput({ ...body, key });
     const setting = await upsertSiteSetting(key, {
       key,
-      value: data.value as Prisma.InputJsonValue | typeof Prisma.JsonNull,
+      value: String(data.value),
       description: (data.description as string | null | undefined) ?? null,
     });
 

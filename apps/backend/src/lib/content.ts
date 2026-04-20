@@ -73,13 +73,9 @@ function parseEnumValue<T extends readonly string[]>(
   return value as T[number];
 }
 
-function toJsonValue(value: unknown): Prisma.InputJsonValue | typeof Prisma.JsonNull {
-  if (value === null) {
-    return Prisma.JsonNull;
-  }
-
+function toJsonValue(value: unknown): string {
   try {
-    return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
+    return JSON.stringify(value);
   } catch {
     throw new ApiError(400, 'metadata atau value harus bisa diserialisasi ke JSON.');
   }
