@@ -11,7 +11,8 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000';
 
 type LoginResult =
   | {
-      token: string;
+      accessToken: string;
+      refreshToken: string;
       user: {
         id: number;
         username: string;
@@ -53,7 +54,8 @@ export default function LoginForm() {
           return;
         }
 
-        sessionStorage.setItem('cms-token', payload.data.token);
+        sessionStorage.setItem('cms-access-token', payload.data.accessToken);
+        sessionStorage.setItem('cms-refresh-token', payload.data.refreshToken);
         sessionStorage.setItem('cms-user', JSON.stringify(payload.data.user));
         setResult(payload.data);
         window.location.href = '/cms';

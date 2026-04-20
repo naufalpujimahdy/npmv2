@@ -5,22 +5,25 @@ import { generateTokenPair } from '@/src/lib/jwt-refresh';
 import { verifyPassword } from '@/src/lib/password';
 import { loginLimiter } from '@/src/lib/rate-limiter';
 import { loginSchema } from '@/src/lib/validation';
-import { parseJsonBody, optionsResponse, jsonResponse } from '@/src/lib/api';
-import { corsHeaders, handleCorsPreFlight } from '@/src/lib/cors';
+import { parseJsonBody, optionsResponse } from '@/src/lib/api';
+import { handleCorsPreFlight } from '@/src/lib/cors';
 
 export async function POST(request: Request) {
   // Handle CORS preflight
   const corsPreFlight = handleCorsPreFlight(request);
   if (corsPreFlight) return corsPreFlight;
 
-  return withErrorHandling(async () => {
+  return withErrorHandling(request, async () => {
     // Check rate limit
     const rateLimit = loginLimiter(request);
     if (!rateLimit.allowed) {
       throw new ApiError(
         429,
         'Terlalu banyak percobaan login. Silakan coba lagi dalam beberapa menit.',
-        'RATE_LIMITED'
+        'RATE_LIMITED',
+        {
+          'Retry-After': String(rateLimit.retryAfter ?? 60),
+        }
       );
     }
 

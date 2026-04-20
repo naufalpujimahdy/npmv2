@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   const corsPreFlight = handleCorsPreFlight(request);
   if (corsPreFlight) return corsPreFlight;
 
-  return withErrorHandling(async () => {
+  return withErrorHandling(request, async () => {
     const token = extractTokenFromHeader(request.headers.get('authorization'));
     if (!token) {
       throw new ApiError(401, 'Token wajib dikirimkan.', 'MISSING_TOKEN');

@@ -87,12 +87,37 @@ export function CmsShell() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  async function refreshToken(): Promise<string | null> {
+    const refreshToken = sessionStorage.getItem('cms-refresh-token');
+    if (!refreshToken) return null;
+
+    try {
+      const response = await fetch(`${apiUrl}/api/auth/refresh`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken }),
+      });
+
+      if (!response.ok) return null;
+
+      const payload = await response.json();
+      if (!payload.ok || !payload.data?.accessToken) return null;
+
+      // Update stored access token
+      sessionStorage.setItem('cms-access-token', payload.data.accessToken);
+      return payload.data.accessToken;
+    } catch {
+      return null;
+    }
+  }
+
   async function loadDashboard() {
     setLoading(true);
     setError(null);
 
-    const token =
-      typeof window !== 'undefined' ? sessionStorage.getItem('cms-token') : null;
+    let token = sessionStorage.getItem('cms-access-token');
 
     if (!token) {
       setState(initialState);
@@ -102,13 +127,40 @@ export function CmsShell() {
     }
 
     try {
-      const [meResponse, contentResponse, settingsResponse] = await Promise.all([
-        fetch(`${apiUrl}/api/auth/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          cache: 'no-store',
-        }),
+      // Try to fetch user data with current access token
+      let meResponse = await fetch(`${apiUrl}/api/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cache: 'no-store',
+      });
+
+      // If access token is expired, try to refresh it
+      if (meResponse.status === 401) {
+        const newToken = await refreshToken();
+        if (newToken) {
+          token = newToken;
+          meResponse = await fetch(`${apiUrl}/api/auth/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            cache: 'no-store',
+          });
+        }
+      }
+
+      if (!meResponse.ok) {
+        if (meResponse.status === 401 || meResponse.status === 403) {
+          sessionStorage.removeItem('cms-access-token');
+          sessionStorage.removeItem('cms-refresh-token');
+          sessionStorage.removeItem('cms-user');
+          router.push('/cms/login');
+          return;
+        }
+        throw new Error('Sesi login sudah tidak valid.');
+      }
+
+      const [contentResponse, settingsResponse] = await Promise.all([
         fetch(`${apiUrl}/api/content`, {
           cache: 'no-store',
         }),
@@ -116,16 +168,6 @@ export function CmsShell() {
           cache: 'no-store',
         }),
       ]);
-
-      if (!meResponse.ok) {
-        if (meResponse.status === 401 || meResponse.status === 403) {
-          sessionStorage.removeItem('cms-token');
-          sessionStorage.removeItem('cms-user');
-          router.push('/cms/login');
-          return;
-        }
-        throw new Error('Sesi login sudah tidak valid.');
-      }
 
       const [mePayload, contentPayload, settingsPayload] = await Promise.all([
         meResponse.json() as Promise<{ data: CmsUser }>,
@@ -156,7 +198,8 @@ export function CmsShell() {
   }, []);
 
   function logout() {
-    sessionStorage.removeItem('cms-token');
+    sessionStorage.removeItem('cms-access-token');
+    sessionStorage.removeItem('cms-refresh-token');
     sessionStorage.removeItem('cms-user');
     router.push('/cms/login');
   }

@@ -1,10 +1,12 @@
 import { ZodError } from 'zod';
+import { corsHeaders } from '@/src/lib/cors';
 
 export class ApiError extends Error {
   constructor(
     public statusCode: number,
     public message: string,
-    public code?: string
+    public code?: string,
+    public headers?: HeadersInit
   ) {
     super(message);
     this.name = 'ApiError';
@@ -24,7 +26,7 @@ export function errorResponse(
   error: string,
   code?: string,
   details?: Record<string, string[]>
-): [ErrorResponse, { status: number }] {
+): [ErrorResponse, { status: number; headers?: HeadersInit }] {
   return [
     {
       ok: false,
@@ -52,6 +54,7 @@ export function handleValidationError(error: ZodError) {
 }
 
 export async function withErrorHandling<T>(
+  request: Request,
   handler: () => Promise<[T, { status?: number }] | Response>
 ): Promise<Response> {
   try {
@@ -64,7 +67,10 @@ export async function withErrorHandling<T>(
     const [data, options] = result;
     return Response.json(
       { ok: true, data },
-      { status: options.status ?? 200 }
+      {
+        status: options.status ?? 200,
+        headers: corsHeaders(request),
+      }
     );
   } catch (error) {
     if (error instanceof ApiError) {
@@ -73,7 +79,13 @@ export async function withErrorHandling<T>(
         error.message,
         error.code
       );
-      return Response.json(response, options);
+      return Response.json(response, {
+        status: options.status,
+        headers: {
+          ...corsHeaders(request),
+          ...(error.headers ?? {}),
+        },
+      });
     }
 
     if (error instanceof ZodError) {
@@ -84,7 +96,10 @@ export async function withErrorHandling<T>(
         'VALIDATION_ERROR',
         details
       );
-      return Response.json(response, options);
+      return Response.json(response, {
+        ...options,
+        headers: corsHeaders(request),
+      });
     }
 
     console.error('Unhandled error:', error);
@@ -94,6 +109,9 @@ export async function withErrorHandling<T>(
       'Terjadi kesalahan server.',
       'INTERNAL_SERVER_ERROR'
     );
-    return Response.json(response, options);
+    return Response.json(response, {
+      ...options,
+      headers: corsHeaders(request),
+    });
   }
 }

@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   const corsPreFlight = handleCorsPreFlight(request);
   if (corsPreFlight) return corsPreFlight;
 
-  return withErrorHandling(async () => {
+  return withErrorHandling(request, async () => {
     const body = await parseJsonBody(request);
     const refreshToken = typeof body.refreshToken === 'string' ? body.refreshToken : null;
 
