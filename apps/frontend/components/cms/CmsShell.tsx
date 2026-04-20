@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Database,
   Globe,
@@ -81,6 +82,7 @@ function formatDate(value: string) {
 }
 
 export function CmsShell() {
+  const router = useRouter();
   const [state, setState] = useState<DashboardState>(initialState);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -95,7 +97,7 @@ export function CmsShell() {
     if (!token) {
       setState(initialState);
       setLoading(false);
-      setError('Token login belum ditemukan. Silakan login ulang ke CMS.');
+      router.push('/cms/login');
       return;
     }
 
@@ -116,6 +118,12 @@ export function CmsShell() {
       ]);
 
       if (!meResponse.ok) {
+        if (meResponse.status === 401 || meResponse.status === 403) {
+          sessionStorage.removeItem('cms-token');
+          sessionStorage.removeItem('cms-user');
+          router.push('/cms/login');
+          return;
+        }
         throw new Error('Sesi login sudah tidak valid.');
       }
 
@@ -150,7 +158,7 @@ export function CmsShell() {
   function logout() {
     sessionStorage.removeItem('cms-token');
     sessionStorage.removeItem('cms-user');
-    window.location.href = '/cms/login';
+    router.push('/cms/login');
   }
 
   const publishedCount = state.content.filter(
