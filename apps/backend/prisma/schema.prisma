@@ -62,3 +62,139 @@ model SiteSetting {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+// Portfolio Models
+model PersonalInfo {
+  id          String   @id @default(cuid())
+  fullName    String
+  title       String // e.g., "Full Stack Developer"
+  bio         String   @db.LongText
+  email       String   @unique
+  phone       String?
+  location    String?
+  avatarUrl   String?
+  resumeUrl   String?
+  linkedinUrl String?
+  githubUrl   String?
+  websiteUrl  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Skill {
+  id          String   @id @default(cuid())
+  name        String
+  category    String // e.g., "Frontend", "Backend", "Database", "Tools"
+  proficiency String // e.g., "Expert", "Advanced", "Intermediate", "Beginner"
+  iconUrl     String?
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Experience {
+  id           String    @id @default(cuid())
+  company      String
+  position     String
+  location     String?
+  startDate    DateTime
+  endDate      DateTime?
+  isCurrent    Boolean   @default(false)
+  description  String    @db.LongText
+  achievements String    @db.LongText // JSON array stored as string
+  technologies String    @db.LongText // JSON array stored as string
+  companyUrl   String?
+  order        Int       @default(0)
+  isVisible    Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Education {
+  id             String    @id @default(cuid())
+  institution    String
+  degree         String
+  field          String
+  location       String?
+  startDate      DateTime
+  endDate        DateTime?
+  gpa            String?
+  description    String?   @db.LongText
+  achievements   String?   @db.LongText // JSON array stored as string
+  institutionUrl String?
+  order          Int       @default(0)
+  isVisible      Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Project {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  description     String    @db.LongText
+  longDescription String?   @db.LongText
+  technologies    String    @db.LongText // JSON array stored as string
+  images          String    @db.LongText // JSON array stored as string
+  demoUrl         String?
+  sourceUrl       String?
+  featured        Boolean   @default(false)
+  status          String    @default("completed") // "completed", "in-progress", "planned"
+  startDate       DateTime?
+  endDate         DateTime?
+  order           Int       @default(0)
+  isVisible       Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Certification {
+  id            String    @id @default(cuid())
+  name          String
+  issuer        String
+  issueDate     DateTime
+  expiryDate    DateTime?
+  credentialId  String?
+  credentialUrl String?
+  description   String?   @db.LongText
+  imageUrl      String?
+  order         Int       @default(0)
+  isVisible     Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Language {
+  id          String   @id @default(cuid())
+  name        String
+  proficiency String // e.g., "Native", "Fluent", "Conversational", "Basic"
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  name        String
+  position    String
+  company     String
+  content     String   @db.LongText
+  avatarUrl   String?
+  linkedinUrl String?
+  isVisible   Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.LongText
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
