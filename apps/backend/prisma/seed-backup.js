@@ -114,13 +114,9 @@ async function main() {
 
   for (const skill of skillsData) {
     await prisma.skill.upsert({
-      where: { id: `skill-${skill.name.toLowerCase().replace(/\s+/g, "-")}` },
+      where: { name_category: { name: skill.name, category: skill.category } },
       update: {},
-      create: {
-        ...skill,
-        id: `skill-${skill.name.toLowerCase().replace(/\s+/g, "-")}`,
-        isVisible: true,
-      },
+      create: { ...skill, isVisible: true },
     });
   }
 
@@ -493,6 +489,7 @@ async function main() {
       key: "site_name",
       value: JSON.stringify("Naufal Puji Mahdy - Portfolio"),
       description: "Website title",
+      category: "general",
     },
   });
 
@@ -505,6 +502,7 @@ async function main() {
         "Full Stack Web Developer Portfolio - Showcasing projects and skills",
       ),
       description: "Website meta description",
+      category: "seo",
     },
   });
 

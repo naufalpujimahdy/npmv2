@@ -198,3 +198,13 @@ model ContactMessage {
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 }
+
+model ApiLog {
+  id        String   @id @default(cuid())
+  method    String
+  path      String
+  status    Int
+  duration  Int
+  userId    Int?
+  createdAt DateTime @default(now())
+}

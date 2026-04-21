@@ -2,10 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/src/lib/prisma";
 import { withErrorHandling } from "@/src/lib/error-handler";
 import { corsHeaders } from "@/src/lib/cors";
+import { skillSchema } from "@/src/lib/portfolio-validation";
+import { z } from "zod";
 
 async function getSkills(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const category = searchParams.get("category");
+  const includeHidden = searchParams.get("include_hidden") === "true";
+
+  const where: any = includeHidden ? {} : { isVisible: true };
+  if (category) {
+    where.category = category;
+  }
+
   const skills = await prisma.skill.findMany({
-    where: { isVisible: true },
+    where,
     orderBy: { order: "asc" },
   });
 
@@ -15,11 +26,22 @@ async function getSkills(request: NextRequest) {
 async function createSkill(request: NextRequest) {
   const body = await request.json();
 
-  const skill = await prisma.skill.create({
-    data: body,
-  });
+  try {
+    const validated = skillSchema.parse(body);
+    const skill = await prisma.skill.create({
+      data: validated,
+    });
 
-  return NextResponse.json({ ok: true, data: skill }, { status: 201, headers: corsHeaders(request) });
+    return NextResponse.json({ ok: true, data: skill }, { status: 201, headers: corsHeaders(request) });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { ok: false, error: "Validation failed", details: error.errors },
+        { status: 400, headers: corsHeaders(request) }
+      );
+    }
+    throw error;
+  }
 }
 
 export const GET = withErrorHandling(getSkills);

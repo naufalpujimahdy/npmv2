@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/src/lib/prisma";
 import { withErrorHandling } from "@/src/lib/error-handler";
 import { corsHeaders } from "@/src/lib/cors";
+import { testimonialSchema } from "@/src/lib/portfolio-validation";
+import { z } from "zod";
 
 async function getTestimonials(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const includeHidden = searchParams.get("include_hidden") === "true";
+
   const testimonials = await prisma.testimonial.findMany({
-    where: { isVisible: true },
+    where: includeHidden ? {} : { isVisible: true },
     orderBy: { order: "asc" },
   });
 
@@ -15,11 +20,22 @@ async function getTestimonials(request: NextRequest) {
 async function createTestimonial(request: NextRequest) {
   const body = await request.json();
 
-  const testimonial = await prisma.testimonial.create({
-    data: body,
-  });
+  try {
+    const validated = testimonialSchema.parse(body);
+    const testimonial = await prisma.testimonial.create({
+      data: validated,
+    });
 
-  return NextResponse.json({ ok: true, data: testimonial }, { status: 201, headers: corsHeaders(request) });
+    return NextResponse.json({ ok: true, data: testimonial }, { status: 201, headers: corsHeaders(request) });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { ok: false, error: "Validation failed", details: error.errors },
+        { status: 400, headers: corsHeaders(request) }
+      );
+    }
+    throw error;
+  }
 }
 
 export const GET = withErrorHandling(getTestimonials);
