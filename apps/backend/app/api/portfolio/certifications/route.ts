@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { withErrorHandling } from "@/lib/error-handler";
-import { corsHeaders } from "@/lib/cors";
+import { prisma } from "@/src/lib/prisma";
+import { withErrorHandling } from "@/src/lib/error-handler";
+import { corsHeaders } from "@/src/lib/cors";
 
-async function getCertifications() {
+async function getCertifications(request: NextRequest) {
   const certifications = await prisma.certification.findMany({
     where: { isVisible: true },
     orderBy: { order: "asc" },
   });
 
-  return NextResponse.json(certifications, { headers: corsHeaders });
+  return NextResponse.json({ ok: true, data: certifications }, { headers: corsHeaders(request) });
 }
 
 async function createCertification(request: NextRequest) {
@@ -19,7 +19,7 @@ async function createCertification(request: NextRequest) {
     data: body,
   });
 
-  return NextResponse.json(certification, { status: 201, headers: corsHeaders });
+  return NextResponse.json({ ok: true, data: certification }, { status: 201, headers: corsHeaders(request) });
 }
 
 export const GET = withErrorHandling(getCertifications);

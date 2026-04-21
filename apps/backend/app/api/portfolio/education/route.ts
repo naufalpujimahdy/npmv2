@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { withErrorHandling } from "@/lib/error-handler";
-import { corsHeaders } from "@/lib/cors";
+import { prisma } from "@/src/lib/prisma";
+import { withErrorHandling } from "@/src/lib/error-handler";
+import { corsHeaders } from "@/src/lib/cors";
 
-async function getEducation() {
+async function getEducation(request: NextRequest) {
   const education = await prisma.education.findMany({
     where: { isVisible: true },
     orderBy: { order: "asc" },
   });
 
-  return NextResponse.json(education, { headers: corsHeaders });
+  return NextResponse.json({ ok: true, data: education }, { headers: corsHeaders(request) });
 }
 
 async function createEducation(request: NextRequest) {
@@ -19,7 +19,7 @@ async function createEducation(request: NextRequest) {
     data: body,
   });
 
-  return NextResponse.json(education, { status: 201, headers: corsHeaders });
+  return NextResponse.json({ ok: true, data: education }, { status: 201, headers: corsHeaders(request) });
 }
 
 export const GET = withErrorHandling(getEducation);

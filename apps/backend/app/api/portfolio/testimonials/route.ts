@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { withErrorHandling } from "@/lib/error-handler";
-import { corsHeaders } from "@/lib/cors";
+import { prisma } from "@/src/lib/prisma";
+import { withErrorHandling } from "@/src/lib/error-handler";
+import { corsHeaders } from "@/src/lib/cors";
 
-async function getTestimonials() {
+async function getTestimonials(request: NextRequest) {
   const testimonials = await prisma.testimonial.findMany({
     where: { isVisible: true },
     orderBy: { order: "asc" },
   });
 
-  return NextResponse.json(testimonials, { headers: corsHeaders });
+  return NextResponse.json({ ok: true, data: testimonials }, { headers: corsHeaders(request) });
 }
 
 async function createTestimonial(request: NextRequest) {
@@ -19,7 +19,7 @@ async function createTestimonial(request: NextRequest) {
     data: body,
   });
 
-  return NextResponse.json(testimonial, { status: 201, headers: corsHeaders });
+  return NextResponse.json({ ok: true, data: testimonial }, { status: 201, headers: corsHeaders(request) });
 }
 
 export const GET = withErrorHandling(getTestimonials);

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { withErrorHandling } from "@/lib/error-handler";
-import { corsHeaders } from "@/lib/cors";
+import { prisma } from "@/src/lib/prisma";
+import { withErrorHandling } from "@/src/lib/error-handler";
+import { corsHeaders } from "@/src/lib/cors";
 
-async function getPortfolioSettings() {
+async function getPortfolioSettings(request: NextRequest) {
   const settings = await prisma.siteSetting.findMany({
     where: {
       category: {
@@ -22,7 +22,7 @@ async function getPortfolioSettings() {
     }
   });
 
-  return NextResponse.json(settingsObj, { headers: corsHeaders });
+  return NextResponse.json({ ok: true, data: settingsObj }, { headers: corsHeaders(request) });
 }
 
 async function updatePortfolioSettings(request: NextRequest) {
@@ -47,7 +47,7 @@ async function updatePortfolioSettings(request: NextRequest) {
 
   await prisma.$transaction(updates);
 
-  return NextResponse.json({ success: true }, { headers: corsHeaders });
+  return NextResponse.json({ ok: true, data: { success: true } }, { headers: corsHeaders(request) });
 }
 
 export const GET = withErrorHandling(getPortfolioSettings);

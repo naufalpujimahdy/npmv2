@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { withErrorHandling } from "@/lib/error-handler";
-import { corsHeaders } from "@/lib/cors";
+import { prisma } from "@/src/lib/prisma";
+import { withErrorHandling } from "@/src/lib/error-handler";
+import { corsHeaders } from "@/src/lib/cors";
 
-async function getLanguages() {
+async function getLanguages(request: NextRequest) {
   const languages = await prisma.language.findMany({
     where: { isVisible: true },
     orderBy: { order: "asc" },
   });
 
-  return NextResponse.json(languages, { headers: corsHeaders });
+  return NextResponse.json({ ok: true, data: languages }, { headers: corsHeaders(request) });
 }
 
 async function createLanguage(request: NextRequest) {
@@ -19,7 +19,7 @@ async function createLanguage(request: NextRequest) {
     data: body,
   });
 
-  return NextResponse.json(language, { status: 201, headers: corsHeaders });
+  return NextResponse.json({ ok: true, data: language }, { status: 201, headers: corsHeaders(request) });
 }
 
 export const GET = withErrorHandling(getLanguages);
