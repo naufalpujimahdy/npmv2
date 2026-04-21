@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
 import { CmsSidebar } from '@/components/cms/CmsSidebar';
-import { DashboardOverview } from '@/components/cms/DashboardOverview';
+import { PortfolioManager } from '@/components/cms/PortfolioManager';
 
-export default function CmsDashboardPage() {
+export default function PortfolioPage() {
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
 
@@ -33,7 +33,7 @@ export default function CmsDashboardPage() {
       <div className="grid min-h-[calc(100vh-2rem)] gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         <CmsSidebar />
         <main className="overflow-auto">
-          <DashboardOverview />
+          <PortfolioManager />
         </main>
       </div>
     </div>

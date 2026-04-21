@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-
 import { CmsSidebar } from '@/components/cms/CmsSidebar';
-import { DashboardOverview } from '@/components/cms/DashboardOverview';
+import { ContentForm } from '@/components/cms/ContentForm';
+import { useState, useEffect } from 'react';
 
-export default function CmsDashboardPage() {
+export default function NewContentPage() {
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
 
@@ -33,7 +32,7 @@ export default function CmsDashboardPage() {
       <div className="grid min-h-[calc(100vh-2rem)] gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         <CmsSidebar />
         <main className="overflow-auto">
-          <DashboardOverview />
+          <ContentForm isNew />
         </main>
       </div>
     </div>
