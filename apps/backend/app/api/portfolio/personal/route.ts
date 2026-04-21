@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma  from "@/src/lib/prisma";
 import { withErrorHandling } from "@/src/lib/error-handler";
-import { corsHeaders } from "@/src/lib/cors";
+import { corsHeaders, handleCorsPreFlight } from "@/src/lib/cors";
 
 export async function GET(request: NextRequest) {
   return withErrorHandling(request, async() =>{
@@ -32,4 +32,10 @@ export async function PUT(request: NextRequest) {
     
     return NextResponse.json({ ok: true, data: personalInfo }, { headers: corsHeaders(request) });
   })
+}
+
+export function OPTIONS(request: Request) {
+  const corsPreFlight = handleCorsPreFlight(request);
+  if (corsPreFlight) return corsPreFlight;
+  return new Response(null, { status: 204 });
 }

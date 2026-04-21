@@ -5,17 +5,20 @@ Selamat! Sistem CMS lengkap untuk portfolio Anda sudah berhasil dibuat dan siap 
 ## 📦 Yang Sudah Dibuat
 
 ### Backend API (Port 3000)
+
 ✅ REST API untuk content & portfolio management
 ✅ Authentication dengan JWT
 ✅ Database dengan Prisma ORM
 ✅ Portfolio sections (projects, skills, experience, education, certifications, languages, testimonials)
 
 ### Frontend - Public Portfolio (Port 3001)
+
 ✅ Display portfolio website
 ✅ Show projects, skills, dan experience
 ✅ Responsive design
 
 ### Frontend - Admin CMS (Port 3001)
+
 ✅ Dashboard dengan statistics
 ✅ Content management (create, read, update, delete)
 ✅ Portfolio sections manager
@@ -30,6 +33,7 @@ Selamat! Sistem CMS lengkap untuk portfolio Anda sudah berhasil dibuat dan siap 
 ### Step 1: Pastikan Kedua Server Berjalan
 
 **Terminal 1 - Backend:**
+
 ```bash
 cd apps/backend
 pnpm dev
@@ -38,10 +42,11 @@ pnpm dev
 ```
 
 **Terminal 2 - Frontend:**
+
 ```bash
 cd apps/frontend
 pnpm dev
-# Output: ✓ Ready in 1773ms  
+# Output: ✓ Ready in 1773ms
 # Berjalan di http://localhost:3001
 ```
 
@@ -55,6 +60,7 @@ pnpm dev
 ### Step 3: Mulai Gunakan CMS
 
 Navigate melalui sidebar:
+
 - **Dashboard** - Lihat statistik
 - **Content** - Manage artikel/halaman
 - **Portfolio** - Manage projects, skills, dsb
@@ -89,12 +95,14 @@ Ada 3 file dokumentasi yang sudah dibuat:
 ## 🎯 Main Features
 
 ### Dashboard
+
 - Total content counter
 - Draft vs Published count
 - Portfolio items overview
 - Quick stats
 
 ### Content Management
+
 - Create new content/artikel
 - Edit existing content
 - Delete content
@@ -103,6 +111,7 @@ Ada 3 file dokumentasi yang sudah dibuat:
 - Type indicators
 
 ### Portfolio Management
+
 - **Projects** - Manage your projects with featured flag
 - **Skills** - List technical skills by category
 - **Experience** - (ready to implement)
@@ -112,6 +121,7 @@ Ada 3 file dokumentasi yang sudah dibuat:
 - **Testimonials** - (ready to implement)
 
 ### Settings
+
 - Site configuration
 - Contact information
 - Email & phone settings
@@ -119,6 +129,7 @@ Ada 3 file dokumentasi yang sudah dibuat:
 ## 🔧 Technical Details
 
 **Frontend Stack:**
+
 - Next.js 16.2.2
 - React 19.2.4
 - TypeScript
@@ -127,12 +138,14 @@ Ada 3 file dokumentasi yang sudah dibuat:
 - Lucide React icons
 
 **Backend Stack:**
+
 - Next.js 16.2.2
 - Prisma ORM
 - SQLite (dev) / PostgreSQL (prod)
 - JWT Authentication
 
 **Monorepo:**
+
 - pnpm workspaces
 - Shared package.json
 - Independent builds
@@ -184,18 +197,21 @@ Hooks:
 ## 📊 API Endpoints
 
 **Authentication:**
+
 - `POST /api/auth/register` - Register
 - `POST /api/auth/login` - Login
 - `POST /api/auth/refresh` - Refresh token
 - `GET /api/auth/me` - Current user
 
 **Content:**
+
 - `GET /api/content` - List
 - `POST /api/content` - Create
 - `PUT /api/content/:id` - Update
 - `DELETE /api/content/:id` - Delete
 
 **Portfolio:**
+
 - `GET /api/portfolio/projects`
 - `GET /api/portfolio/skills`
 - `GET /api/portfolio/experience`
@@ -290,21 +306,25 @@ Hooks:
 ## 🆘 Troubleshooting
 
 **Can't access CMS?**
+
 - Check if both servers are running
 - Clear browser cache
 - Check browser console for errors
 
 **API errors?**
+
 - Check backend logs
 - Verify DATABASE_URL
 - Check JWT_SECRET is set
 
 **Content not showing?**
+
 - Verify status is PUBLISHED
 - Check portfolio data exists
 - Refresh browser page
 
 **Authentication issues?**
+
 - Clear sessionStorage
 - Try logging in again
 - Check browser console
@@ -323,12 +343,14 @@ Hooks:
 Dengan CMS ini, Anda dapat:
 
 ❌ Before (Backend only):
+
 - Manual database queries
 - No UI
 - Command line only
 - Time consuming
 
 ✅ After (With CMS):
+
 - Easy-to-use interface
 - Click & fill forms
 - Visual management
@@ -337,9 +359,10 @@ Dengan CMS ini, Anda dapat:
 
 ## 🎉 Congratulations!
 
-Sistem portfolio CMS Anda sudah siap! 
+Sistem portfolio CMS Anda sudah siap!
 
 Anda sekarang memiliki:
+
 - ✅ Powerful API backend
 - ✅ Beautiful admin CMS
 - ✅ Public portfolio website

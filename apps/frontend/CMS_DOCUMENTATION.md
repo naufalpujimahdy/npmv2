@@ -1,23 +1,27 @@
 # Portfolio CMS - Frontend Documentation
 
 ## Overview
+
 Frontend CMS untuk management konten portfolio Anda. Dibangun dengan Next.js 16 dan Tailwind CSS.
 
 ## Features
 
 ### 1. Authentication
+
 - Login page dengan form sederhana
 - JWT token management dengan refresh token
 - Session storage untuk token
 - Auto-logout jika token expired
 
 ### 2. Dashboard
+
 - Overview statistik konten
 - Quick stats cards
 - Recent activity tracking
 - Content status overview
 
 ### 3. Content Management
+
 - Manage artikel/halaman konten
 - Create, read, update, delete konten
 - Filter berdasarkan judul
@@ -25,6 +29,7 @@ Frontend CMS untuk management konten portfolio Anda. Dibangun dengan Next.js 16 
 - Type indicators (Article, Page, Snippet)
 
 ### 4. Portfolio Management
+
 - **Projects**: Manage portfolio projects dengan featured flag
 - **Skills**: Manage skills by category dengan level
 - **Experience**: (coming soon)
@@ -34,6 +39,7 @@ Frontend CMS untuk management konten portfolio Anda. Dibangun dengan Next.js 16 
 - **Testimonials**: (coming soon)
 
 ### 5. Site Settings
+
 - General site configuration
 - Contact information management
 - API key management (coming soon)
@@ -75,6 +81,7 @@ apps/frontend/
 ## Hooks
 
 ### `useCmsAuth()`
+
 Mengelola authentication state dan token.
 
 ```typescript
@@ -82,6 +89,7 @@ const { user, token, loading, error, logout, isAuthenticated } = useCmsAuth();
 ```
 
 ### `useCmsApi()`
+
 Membuat API requests dengan auth headers otomatis.
 
 ```typescript
@@ -95,6 +103,7 @@ const data = await request('/api/endpoint', {
 ## API Endpoints
 
 ### Content
+
 - `GET /api/content` - List all content
 - `GET /api/content?status=DRAFT` - Filter by status
 - `POST /api/content` - Create content
@@ -102,6 +111,7 @@ const data = await request('/api/endpoint', {
 - `DELETE /api/content/:id` - Delete content
 
 ### Portfolio
+
 - `GET /api/portfolio/projects?include_hidden=true`
 - `GET /api/portfolio/skills?include_hidden=true`
 - `GET /api/portfolio/experience?include_hidden=true`
@@ -119,13 +129,16 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 ## Running the CMS
 
 ### Development
+
 ```bash
 cd apps/frontend
 pnpm dev
 ```
+
 CMS akan berjalan di `http://localhost:3001`
 
 ### Production Build
+
 ```bash
 pnpm build
 pnpm start
@@ -134,6 +147,7 @@ pnpm start
 ## UI Components
 
 Semua komponen UI berada di `components/ui/`:
+
 - `avatar.tsx` - Avatar component
 - `badge.tsx` - Badge/label component
 - `button.tsx` - Button component
@@ -147,6 +161,7 @@ Semua komponen UI berada di `components/ui/`:
 ## Navigation
 
 Sidebar navigation mengarah ke:
+
 - `/cms` - Dashboard
 - `/cms/content` - Content manager
 - `/cms/portfolio` - Portfolio manager
@@ -155,6 +170,7 @@ Sidebar navigation mengarah ke:
 ## Styling
 
 Menggunakan Tailwind CSS v4 dengan:
+
 - Custom CSS variables untuk styling konsisten
 - Responsive design (mobile-first)
 - Dark mode ready
@@ -171,6 +187,7 @@ Menggunakan Tailwind CSS v4 dengan:
 ## Next Steps
 
 ### High Priority
+
 1. ✅ Setup dashboard & basic layout
 2. ✅ Content management UI
 3. ✅ Portfolio sections overview
@@ -179,12 +196,14 @@ Menggunakan Tailwind CSS v4 dengan:
 6. 🔄 Image/file upload
 
 ### Medium Priority
+
 - Rich text editor untuk konten
 - Search & filter improvements
 - Bulk operations
 - Analytics dashboard
 
 ### Low Priority
+
 - Dark mode toggle
 - User preferences
 - Activity log

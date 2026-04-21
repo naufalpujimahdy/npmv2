@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/src/lib/prisma";
 import { withErrorHandling } from "@/src/lib/error-handler";
-import { corsHeaders } from "@/src/lib/cors";
+import { corsHeaders, handleCorsPreFlight } from "@/src/lib/cors";
 import { languageSchema } from "@/src/lib/portfolio-validation";
 import { z } from "zod";
 
@@ -40,3 +40,9 @@ async function createLanguage(request: NextRequest) {
 
 export const GET = withErrorHandling(getLanguages);
 export const POST = withErrorHandling(createLanguage);
+
+export function OPTIONS(request: Request) {
+  const corsPreFlight = handleCorsPreFlight(request);
+  if (corsPreFlight) return corsPreFlight;
+  return new Response(null, { status: 204 });
+}

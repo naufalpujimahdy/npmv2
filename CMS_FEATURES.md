@@ -4,15 +4,19 @@ Selamat! Anda sekarang memiliki **CMS lengkap** untuk mengelola portfolio Anda.
 
 ## 🎯 Fitur Utama
 
-### 1. **Dashboard** 
+### 1. **Dashboard**
+
 Halaman utama menampilkan:
+
 - Total konten yang ada
 - Berapa draft vs published
 - Jumlah portfolio items
 - Recent activity
 
 ### 2. **Content Management**
+
 Kelola artikel dan halaman konten:
+
 - ➕ Buat konten baru
 - ✏️ Edit konten existing
 - 🗑️ Hapus konten
@@ -20,7 +24,9 @@ Kelola artikel dan halaman konten:
 - 📊 Lihat status (Draft/Published/Archived)
 
 ### 3. **Portfolio Sections**
+
 Kelola berbagai bagian portfolio:
+
 - **Projects** - Tampilkan portfolio projects
 - **Skills** - List skill technical Anda
 - **Experience** - Pengalaman kerja
@@ -30,7 +36,9 @@ Kelola berbagai bagian portfolio:
 - **Testimonials** - Testimoni klien
 
 ### 4. **Settings**
+
 Konfigurasi site:
+
 - Nama website
 - Deskripsi
 - Email & phone
@@ -39,11 +47,13 @@ Konfigurasi site:
 ## 🚀 Cara Menggunakan
 
 ### Login
+
 1. Buka http://localhost:3001/cms/login
 2. Masukkan username & password
 3. Anda akan masuk ke dashboard
 
 ### Membuat Konten Baru
+
 1. Klik **Content** di sidebar
 2. Klik **"New Content"**
 3. Isi form:
@@ -55,6 +65,7 @@ Konfigurasi site:
 4. Klik **"Create Content"**
 
 ### Menambah Project
+
 1. Klik **Portfolio** di sidebar
 2. Klik tab **Projects**
 3. Klik **"Add Project"**
@@ -62,6 +73,7 @@ Konfigurasi site:
 5. Save
 
 ### Menambah Skill
+
 1. Klik **Portfolio** di sidebar
 2. Klik tab **Skills**
 3. Klik **"Add Skill"**
@@ -89,14 +101,14 @@ Konfigurasi site:
 
 ## 📚 Pages & URLs
 
-| Page | URL | Deskripsi |
-|------|-----|-----------|
-| Login | `/cms/login` | Login page |
-| Dashboard | `/cms` | Statistics & overview |
-| Content List | `/cms/content` | List semua konten |
-| New Content | `/cms/content/new` | Buat konten baru |
-| Portfolio | `/cms/portfolio` | Manage portfolio |
-| Settings | `/cms/settings` | Site configuration |
+| Page         | URL                | Deskripsi             |
+| ------------ | ------------------ | --------------------- |
+| Login        | `/cms/login`       | Login page            |
+| Dashboard    | `/cms`             | Statistics & overview |
+| Content List | `/cms/content`     | List semua konten     |
+| New Content  | `/cms/content/new` | Buat konten baru      |
+| Portfolio    | `/cms/portfolio`   | Manage portfolio      |
+| Settings     | `/cms/settings`    | Site configuration    |
 
 ## 🎨 Design Features
 
@@ -142,6 +154,7 @@ Frontend (3001) ←→ Backend API (3000)
 ```
 
 API endpoints yang digunakan:
+
 - `/api/content` - Content management
 - `/api/portfolio/*` - Portfolio data
 - `/api/auth/*` - Authentication
@@ -150,12 +163,14 @@ API endpoints yang digunakan:
 ## 📝 Example Content Creation
 
 **Before (Backend Only):**
+
 ```
 Harus manual query database dan insert data
 Tidak ada UI, perlu command line tools
 ```
 
 **After (With CMS):**
+
 ```
 1. Click "New Content"
 2. Fill form
@@ -169,7 +184,6 @@ Untuk menambah fitur lanjutan:
 
 1. **Rich Text Editor**
    - Untuk formatting konten yang lebih baik
-   
 2. **Image Upload**
    - Upload gambar untuk projects & skills
 
@@ -216,6 +230,7 @@ A: Belum, perlu development lebih lanjut
 ## 📞 Support
 
 Jika ada masalah:
+
 1. Check browser console (F12)
 2. Check backend logs
 3. Verify both servers running

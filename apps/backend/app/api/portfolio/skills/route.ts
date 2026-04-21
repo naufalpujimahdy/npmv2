@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import prisma from "@/src/lib/prisma";
 import { withErrorHandling } from "@/src/lib/error-handler";
+import { corsHeaders, handleCorsPreFlight } from "@/src/lib/cors";
 import { skillSchema } from "@/src/lib/portfolio-validation";
 
 export async function GET(request: NextRequest) {
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
       orderBy: { order: "asc" },
     });
     
-    return [skills, { status: 200 }];
+    return [skills, { status: 200, headers: corsHeaders(request) }];
   });
 }
 
@@ -33,6 +34,12 @@ export async function POST(request: NextRequest) {
       data: validated,
     });
 
-    return [skill, { status: 201 }];
+    return [skill, { status: 201, headers: corsHeaders(request) }];
   });
+}
+
+export function OPTIONS(request: Request) {
+  const corsPreFlight = handleCorsPreFlight(request);
+  if (corsPreFlight) return corsPreFlight;
+  return new Response(null, { status: 204 });
 }

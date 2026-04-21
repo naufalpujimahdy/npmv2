@@ -69,18 +69,21 @@ npmv2/ (root)
 ### 1. Backend API (Port 3000)
 
 **Teknologi:**
+
 - Next.js 16
 - Prisma ORM
 - SQLite/PostgreSQL Database
 - JWT Authentication
 
 **Fungsi:**
+
 - REST API endpoints
 - Database management
 - Authentication & authorization
 - Content & portfolio data
 
 **Key Routes:**
+
 ```
 Authentication:
   POST   /api/auth/register      - Register user
@@ -114,18 +117,21 @@ Health:
 ### 2. Frontend - Public Portfolio (Port 3001)
 
 **Teknologi:**
+
 - Next.js 16
 - React 19
 - Tailwind CSS
 - TypeScript
 
 **Fungsi:**
+
 - Display portfolio website
 - Show projects, skills, experience
 - Contact information
 - Public-facing content
 
 **Pages:**
+
 - `/` - Home page
 - `/projects` - Projects listing
 - `/about` - About page
@@ -134,18 +140,21 @@ Health:
 ### 3. Frontend - CMS Admin (Port 3001)
 
 **Teknologi:**
+
 - Next.js 16 (same frontend)
 - React hooks
 - Radix UI components
 - JWT authentication
 
 **Fungsi:**
+
 - Manage content
 - Manage portfolio items
 - Configure site settings
 - Admin dashboard
 
 **Pages:**
+
 - `/cms/login` - Login
 - `/cms` - Dashboard
 - `/cms/content` - Content manager
@@ -213,6 +222,7 @@ If refresh fails, redirect to login
 ## API Response Format
 
 **Success Response:**
+
 ```json
 {
   "ok": true,
@@ -225,6 +235,7 @@ If refresh fails, redirect to login
 ```
 
 **Error Response:**
+
 ```json
 {
   "ok": false,
@@ -265,6 +276,7 @@ pnpm start
 ## Environment Variables
 
 **.env (Backend)**
+
 ```env
 DATABASE_URL=file:./dev.db
 JWT_SECRET=your_secret_key
@@ -275,6 +287,7 @@ ADMIN_API_KEY=admin_key_here
 ```
 
 **.env.local (Frontend)**
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
@@ -282,6 +295,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 ## Deployment
 
 For production deployment:
+
 1. Set environment variables
 2. Build both apps
 3. Deploy backend to server/cloud
@@ -293,30 +307,35 @@ For production deployment:
 ## Key Features
 
 ✅ **CMS System**
+
 - Content management
 - Portfolio management
 - Settings configuration
 - User authentication
 
 ✅ **Public Portfolio**
+
 - Display projects
 - Show skills & experience
 - Contact information
 - About section
 
 ✅ **Security**
+
 - JWT authentication
 - Token refresh
 - Protected routes
 - Admin API keys
 
 ✅ **Database**
+
 - Prisma ORM
 - Type-safe queries
 - Migrations support
 - Seed data
 
 ✅ **Responsive Design**
+
 - Mobile-friendly
 - Desktop optimized
 - Tablet support
@@ -324,18 +343,18 @@ For production deployment:
 
 ## Technology Stack Summary
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend Framework | Next.js 16 |
-| Language | TypeScript |
-| Styling | Tailwind CSS |
-| UI Components | Radix UI |
-| Icons | Lucide React |
-| Database ORM | Prisma |
-| Authentication | JWT |
-| API Style | REST |
-| Monorepo | pnpm workspaces |
-| Runtime | Node.js |
+| Layer              | Technology      |
+| ------------------ | --------------- |
+| Frontend Framework | Next.js 16      |
+| Language           | TypeScript      |
+| Styling            | Tailwind CSS    |
+| UI Components      | Radix UI        |
+| Icons              | Lucide React    |
+| Database ORM       | Prisma          |
+| Authentication     | JWT             |
+| API Style          | REST            |
+| Monorepo           | pnpm workspaces |
+| Runtime            | Node.js         |
 
 ## Project Status
 
@@ -347,11 +366,13 @@ For production deployment:
 ✅ Documentation - Complete
 
 🔄 In Progress:
+
 - Advanced features (image upload, rich text)
 - Analytics dashboard
 - User management
 
 📋 Planned:
+
 - Dark mode
 - Multi-language support
 - Email notifications

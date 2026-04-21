@@ -5,6 +5,7 @@
 ### 1. Ensure Both Servers Are Running
 
 **Backend (API Server)**
+
 ```bash
 cd apps/backend
 pnpm dev
@@ -12,6 +13,7 @@ pnpm dev
 ```
 
 **Frontend (CMS)**
+
 ```bash
 cd apps/frontend
 pnpm dev
@@ -31,12 +33,14 @@ pnpm dev
 The CMS has 4 main sections:
 
 #### Dashboard (`/cms`)
+
 - Overview of your content statistics
 - Draft vs Published content count
 - Portfolio items count
 - Recent activity
 
 #### Content Management (`/cms/content`)
+
 - View all content entries
 - Search/filter content
 - Create new content (`/cms/content/new`)
@@ -44,6 +48,7 @@ The CMS has 4 main sections:
 - Delete content
 
 #### Portfolio Management (`/cms/portfolio`)
+
 - Manage all portfolio sections
 - Projects - Your work/projects
 - Skills - Technical skills
@@ -54,6 +59,7 @@ The CMS has 4 main sections:
 - Testimonials - Client/colleague testimonials
 
 #### Settings (`/cms/settings`)
+
 - Configure site settings
 - Manage contact information
 - API key management
@@ -91,6 +97,7 @@ The CMS has 4 main sections:
 ### 5. Content Status
 
 Content can have different statuses:
+
 - **DRAFT**: Hidden from public, only visible in CMS
 - **PUBLISHED**: Visible on your portfolio website
 - **ARCHIVED**: Old content, hidden from public
@@ -106,17 +113,20 @@ Content can have different statuses:
 ## Troubleshooting
 
 ### Can't access CMS
+
 - Make sure backend is running on port 3000
 - Make sure frontend is running on port 3001
 - Clear browser cache and cookies
 - Try logging in again
 
 ### Content not showing
+
 - Make sure content status is "PUBLISHED"
 - Check if you have proper authentication
 - Wait a few seconds for content to sync
 
 ### Changes not saving
+
 - Check browser console for errors
 - Make sure backend API is responding
 - Try refreshing the page
@@ -124,6 +134,7 @@ Content can have different statuses:
 ## Default Admin Credentials
 
 Set these in your `.env` file:
+
 ```env
 # Backend
 ADMIN_API_KEY=your_admin_key
@@ -136,6 +147,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 ## Support
 
 For issues, check:
+
 1. Backend logs (port 3000)
 2. Frontend console (F12)
 3. Browser Network tab

@@ -38,6 +38,7 @@ export function useCmsApi() {
           },
           body: options.body ? JSON.stringify(options.body) : undefined,
         });
+console.log(response);
 
         const data: ApiResponse<T> = await response.json();
 
