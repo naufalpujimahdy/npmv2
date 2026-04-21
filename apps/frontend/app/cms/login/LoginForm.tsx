@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,8 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000';
 
 type LoginResult =
   | {
-      token: string;
+      accessToken: string;
+      refreshToken: string;
       user: {
         id: number;
         username: string;
@@ -24,6 +26,87 @@ export default function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<LoginResult>(null);
   const [isPending, startTransition] = useTransition();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const router = useRouter();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      const accessToken = sessionStorage.getItem('cms-access-token');
+      
+      if (!accessToken) {
+        setIsCheckingAuth(false);
+        return; // No token, show login form
+      }
+
+      try {
+        // Validate token with backend
+        const response = await fetch(`${apiUrl}/api/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          // Token is valid, redirect to dashboard
+          router.push('/cms');
+          return;
+        }
+
+        // Token is invalid, clear storage
+        sessionStorage.removeItem('cms-access-token');
+        sessionStorage.removeItem('cms-refresh-token');
+        sessionStorage.removeItem('cms-user');
+      } catch {
+        // Network error or other issues, clear storage to be safe
+        sessionStorage.removeItem('cms-access-token');
+        sessionStorage.removeItem('cms-refresh-token');
+        sessionStorage.removeItem('cms-user');
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, [router]);
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      const accessToken = sessionStorage.getItem('cms-access-token');
+      
+      if (!accessToken) {
+        return; // No token, show login form
+      }
+
+      try {
+        // Validate token with backend
+        const response = await fetch(`${apiUrl}/api/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          // Token is valid, redirect to dashboard
+          router.push('/cms');
+          return;
+        }
+
+        // Token is invalid, clear storage
+        sessionStorage.removeItem('cms-access-token');
+        sessionStorage.removeItem('cms-refresh-token');
+        sessionStorage.removeItem('cms-user');
+      } catch {
+        // Network error or other issues, clear storage to be safe
+        sessionStorage.removeItem('cms-access-token');
+        sessionStorage.removeItem('cms-refresh-token');
+        sessionStorage.removeItem('cms-user');
+      }
+    };
+
+    checkAuthStatus();
+  }, [router]);
 
   async function handleSubmit(formData: FormData) {
     setError(null);
@@ -53,7 +136,8 @@ export default function LoginForm() {
           return;
         }
 
-        sessionStorage.setItem('cms-token', payload.data.token);
+        sessionStorage.setItem('cms-access-token', payload.data.accessToken);
+        sessionStorage.setItem('cms-refresh-token', payload.data.refreshToken);
         sessionStorage.setItem('cms-user', JSON.stringify(payload.data.user));
         setResult(payload.data);
         window.location.href = '/cms';
@@ -66,8 +150,16 @@ export default function LoginForm() {
 
   return (
     <Card className="w-full max-w-md overflow-hidden rounded-[32px] border-white/50 bg-white/90 shadow-[0_20px_80px_rgba(15,23,42,0.12)] backdrop-blur">
-      <form action={handleSubmit}>
-        <CardContent className="flex flex-col justify-center gap-6 p-8 md:p-10">
+      {isCheckingAuth ? (
+        <CardContent className="flex flex-col justify-center gap-6 p-8 md:p-10 text-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
+            <p className="text-sm text-gray-600">Memeriksa status login...</p>
+          </div>
+        </CardContent>
+      ) : (
+        <form action={handleSubmit}>
+          <CardContent className="flex flex-col justify-center gap-6 p-8 md:p-10">
           <div>
             <h1 className="m-0 text-3xl font-semibold tracking-tight">
               Sign in
@@ -116,6 +208,7 @@ export default function LoginForm() {
           ) : null}
         </CardContent>
       </form>
+      )}
     </Card>
   );
 }
