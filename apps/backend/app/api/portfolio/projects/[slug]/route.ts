@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/src/lib/prisma";
+import prisma  from "@/src/lib/prisma";
 import { withErrorHandling } from "@/src/lib/error-handler";
 import { corsHeaders } from "@/src/lib/cors";
 
-async function getProject(request: NextRequest, { params }: { params: { slug: string } }) {
-  const project = await prisma.project.findUnique({
+export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
+  return withErrorHandling(request, async() => {
+    const project = await prisma.project.findUnique({
     where: { slug: params.slug },
   });
 
@@ -15,7 +16,6 @@ async function getProject(request: NextRequest, { params }: { params: { slug: st
     );
   }
 
-  return NextResponse.json({ ok: true, data: project }, { headers: corsHeaders(request) });
+  return [project, {status: 200}];
+  })
 }
-
-export const GET = withErrorHandling(getProject);

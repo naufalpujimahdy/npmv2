@@ -102,8 +102,8 @@ model Experience {
   endDate      DateTime?
   isCurrent    Boolean   @default(false)
   description  String    @db.LongText
-  achievements String    @db.LongText // JSON array stored as string
-  technologies String    @db.LongText // JSON array stored as string
+  achievements String?   @db.LongText
+  technologies String?   @db.LongText
   companyUrl   String?
   order        Int       @default(0)
   isVisible    Boolean   @default(true)

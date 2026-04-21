@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import type  Prisma  from '@prisma/client';
 
 import { listSiteSettings, upsertSiteSetting } from '@/src/models/SiteSetting';
 import {

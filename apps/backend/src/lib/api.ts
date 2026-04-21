@@ -5,7 +5,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3001';
 
 function getCorsHeaders() {
   return {
-    'Access-Control-Allow-Origin': FRONTEND_URL,
+    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
     'Access-Control-Allow-Headers':
       'Content-Type, Authorization, x-admin-api-key',

@@ -1,42 +1,34 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/src/lib/prisma";
+import { NextRequest } from "next/server";
+import prisma from "@/src/lib/prisma";
 import { withErrorHandling } from "@/src/lib/error-handler";
-import { corsHeaders } from "@/src/lib/cors";
 import { educationSchema } from "@/src/lib/portfolio-validation";
-import { z } from "zod";
 
-async function getEducation(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const includeHidden = searchParams.get("include_hidden") === "true";
+export async function GET(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    const { searchParams } = new URL(request.url);
+    const includeHidden = searchParams.get("include_hidden") === "true";
 
-  const education = await prisma.education.findMany({
-    where: includeHidden ? {} : { isVisible: true },
-    orderBy: { order: "asc" },
+    const education = await prisma.education.findMany({
+      where: includeHidden ? {} : { isVisible: true },
+      orderBy: { order: "asc" },
+    });
+
+    // Cukup kembalikan array [data, options]
+    return [education, { status: 200 }];
   });
-
-  return NextResponse.json({ ok: true, data: education }, { headers: corsHeaders(request) });
 }
 
-async function createEducation(request: NextRequest) {
-  const body = await request.json();
+export async function POST(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    const body = await request.json();
 
-  try {
+    // Validasi Zod otomatis ditangani oleh withErrorHandling
     const validated = educationSchema.parse(body);
+    
     const education = await prisma.education.create({
       data: validated,
     });
 
-    return NextResponse.json({ ok: true, data: education }, { status: 201, headers: corsHeaders(request) });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { ok: false, error: "Validation failed", details: error.errors },
-        { status: 400, headers: corsHeaders(request) }
-      );
-    }
-    throw error;
-  }
+    return [education, { status: 201 }];
+  });
 }
-
-export const GET = withErrorHandling(getEducation);
-export const POST = withErrorHandling(createEducation);

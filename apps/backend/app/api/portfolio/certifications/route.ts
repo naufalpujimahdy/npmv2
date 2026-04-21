@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/src/lib/prisma";
+import prisma  from "@/src/lib/prisma";
 import { withErrorHandling } from "@/src/lib/error-handler";
 import { corsHeaders } from "@/src/lib/cors";
 import { certificationSchema } from "@/src/lib/portfolio-validation";

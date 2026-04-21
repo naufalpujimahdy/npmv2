@@ -27,18 +27,21 @@ export const skillSchema = z.object({
 
 // Experience
 export const experienceSchema = z.object({
-  company: z.string().min(1, 'Company name is required').trim(),
-  position: z.string().min(1, 'Position is required').trim(),
-  location: z.string().optional().nullable(),
-  startDate: z.string().datetime('Invalid start date'),
-  endDate: z.string().datetime('Invalid end date').optional().nullable(),
+  company: z.string().min(1, "Nama perusahaan wajib diisi"),
+  position: z.string().min(1, "Jabatan wajib diisi"),
+  location: z.string().optional().default(""), // Paksa jadi string kosong jika kosong
+  description: z.string().min(1, "Deskripsi wajib diisi"),
+  
+  // Ini kuncinya: gunakan .default("") agar TS tahu ini pasti string
+  achievements: z.string().default(""), 
+  technologies: z.string().default(""),
+  
+  startDate: z.string().or(z.date()), // Bisa string ISO atau objek Date
+  endDate: z.string().or(z.date()).optional().nullable(),
   isCurrent: z.boolean().default(false),
-  description: z.string().min(1, 'Description is required').trim(),
-  achievements: z.string().optional().nullable(), // JSON array as string
-  technologies: z.string().optional().nullable(), // JSON array as string
-  companyUrl: z.string().url().optional().nullable(),
   order: z.number().int().default(0),
   isVisible: z.boolean().default(true),
+  companyUrl: z.string().url().optional().or(z.literal("")).default(""),
 });
 
 // Education
@@ -59,21 +62,29 @@ export const educationSchema = z.object({
 
 // Project
 export const projectSchema = z.object({
-  title: z.string().min(1, 'Project title is required').trim(),
-  slug: z
-    .string()
-    .min(1, 'Slug is required')
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format'),
-  description: z.string().min(1, 'Description is required').trim(),
-  longDescription: z.string().optional().nullable(),
-  technologies: z.string().optional().nullable(), // JSON array as string
-  images: z.string().optional().nullable(), // JSON array as string
-  demoUrl: z.string().url().optional().nullable(),
-  sourceUrl: z.string().url().optional().nullable(),
+  title: z.string().min(1, "Title wajib diisi"),
+  slug: z.string().min(1, "Slug wajib diisi"),
+  description: z.string().min(1, "Description wajib diisi"),
+  
+  // Field ini opsional di Prisma (String?), jadi boleh .nullable()
+  longDescription: z.string().optional().nullable(), 
+  
+  // Field ini WAJIB di Prisma (LongText tanpa ?), 
+  // jadi kita paksa default string kosong jika tidak diisi
+  technologies: z.string().default(""), 
+  images: z.string().default(""), 
+  
+  // Field opsional di Prisma
+  demoUrl: z.string().url().optional().nullable().or(z.literal("")),
+  sourceUrl: z.string().url().optional().nullable().or(z.literal("")),
+  
   featured: z.boolean().default(false),
-  status: z.enum(['completed', 'in-progress', 'planned']).default('completed'),
-  startDate: z.string().datetime().optional().nullable(),
-  endDate: z.string().datetime().optional().nullable(),
+  status: z.enum(["completed", "in-progress", "planned"]).default("completed"),
+  
+  // Handle tanggal sebagai string ISO atau objek Date
+  startDate: z.string().optional().nullable().or(z.date()),
+  endDate: z.string().optional().nullable().or(z.date()),
+  
   order: z.number().int().default(0),
   isVisible: z.boolean().default(true),
 });
