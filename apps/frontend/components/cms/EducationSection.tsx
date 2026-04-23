@@ -13,72 +13,76 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useCmsApi } from '@/hooks/useCmsApi';
-import { ProjectForm } from './forms/ProjectForm';
+import { EducationForm } from './forms/EducationForm';
 
-interface Project {
+interface Education {
   id: string;
-  title: string;
-  slug: string;
-  description?: string;
-  featured?: boolean;
-  isVisible?: boolean;
+  institution: string;
+  degree: string;
+  field: string;
+  location?: string;
+  startDate: string;
+  endDate?: string;
+  gpa?: string;
+  isVisible: boolean;
+  order: number;
   updatedAt: string;
 }
 
-export function ProjectsSection() {
+export function EducationSection() {
   const { request } = useCmsApi();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [educations, setEducations] = useState<Education[]>([]);
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedEducation, setSelectedEducation] = useState<Education | null>(null);
 
-  const loadProjects = useCallback(async () => {
+  const loadEducations = useCallback(async () => {
     setIsLoading(true);
-    const data = await request<Project[]>('/api/portfolio/projects?include_hidden=true');
+    const data = await request<Education[]>('/api/portfolio/education?include_hidden=true');
     if (Array.isArray(data)) {
-      setProjects(data);
+      setEducations(data);
     }
     setIsLoading(false);
   }, [request]);
 
   useEffect(() => {
-    loadProjects();
-  }, [loadProjects]);
+    loadEducations();
+  }, [loadEducations]);
 
-  const filtered = projects.filter((p) =>
-    p.title.toLowerCase().includes(search.toLowerCase())
+  const filtered = educations.filter((e) =>
+    e.institution.toLowerCase().includes(search.toLowerCase()) ||
+    e.degree.toLowerCase().includes(search.toLowerCase())
   );
 
   const formatDate = (date: string) => {
     return new Intl.DateTimeFormat('id-ID', {
       dateStyle: 'short',
-      timeStyle: 'short',
     }).format(new Date(date));
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Hapus proyek ini?')) return;
+    if (!confirm('Hapus pendidikan ini?')) return;
     
-    const result = await request('/api/portfolio/projects/' + id, {
+    const result = await request('/api/portfolio/education/' + id, {
       method: 'DELETE',
     });
     
     if (result) {
-      setProjects(projects.filter(p => p.id !== id));
+      setEducations(educations.filter(e => e.id !== id));
     }
   };
 
   const handleFormClose = () => {
     setIsFormOpen(false);
-    setSelectedProject(null);
+    setSelectedEducation(null);
   };
 
   const handleFormSuccess = () => {
     handleFormClose();
-    loadProjects();
+    loadEducations();
   };
 
   return (
@@ -87,7 +91,7 @@ export function ProjectsSection() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <Input
-            placeholder="Cari proyek..."
+            placeholder="Cari pendidikan..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10"
@@ -106,7 +110,7 @@ export function ProjectsSection() {
       ) : filtered.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-gray-500">Tidak ada proyek</p>
+            <p className="text-gray-500">Tidak ada riwayat pendidikan</p>
           </CardContent>
         </Card>
       ) : (
@@ -114,36 +118,27 @@ export function ProjectsSection() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Judul</TableHead>
-                <TableHead>Unggulan</TableHead>
+                <TableHead>Institusi</TableHead>
+                <TableHead>Gelar</TableHead>
+                <TableHead>Bidang Studi</TableHead>
+                <TableHead>Tanggal</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Diperbarui</TableHead>
                 <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((project) => (
-                <TableRow key={project.id}>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{project.title}</span>
-                      <span className="text-xs text-gray-500">/{project.slug}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {project.featured ? (
-                      <Badge className="bg-purple-100 text-purple-800">Unggulan</Badge>
-                    ) : (
-                      <span className="text-gray-500">-</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={project.isVisible ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
-                      {project.isVisible ? 'Terlihat' : 'Tersembunyi'}
-                    </Badge>
-                  </TableCell>
+              {filtered.map((edu) => (
+                <TableRow key={edu.id}>
+                  <TableCell className="font-medium">{edu.institution}</TableCell>
+                  <TableCell>{edu.degree}</TableCell>
+                  <TableCell>{edu.field}</TableCell>
                   <TableCell className="text-sm text-gray-600">
-                    {formatDate(project.updatedAt)}
+                    {formatDate(edu.startDate)} - {edu.endDate ? formatDate(edu.endDate) : 'Sekarang'}
+                  </TableCell>
+                  <TableCell>
+                    <Badge className={edu.isVisible ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                      {edu.isVisible ? 'Terlihat' : 'Tersembunyi'}
+                    </Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -151,7 +146,7 @@ export function ProjectsSection() {
                         variant="ghost" 
                         size="sm"
                         onClick={() => {
-                          setSelectedProject(project);
+                          setSelectedEducation(edu);
                           setIsFormOpen(true);
                         }}
                       >
@@ -160,7 +155,7 @@ export function ProjectsSection() {
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        onClick={() => handleDelete(project.id)}
+                        onClick={() => handleDelete(edu.id)}
                       >
                         <Trash2 className="h-4 w-4 text-red-600" />
                       </Button>
@@ -174,8 +169,8 @@ export function ProjectsSection() {
       )}
 
       {isFormOpen && (
-        <ProjectForm 
-          project={selectedProject}
+        <EducationForm 
+          education={selectedEducation}
           onClose={handleFormClose}
           onSuccess={handleFormSuccess}
         />

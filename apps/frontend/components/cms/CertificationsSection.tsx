@@ -13,72 +13,75 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useCmsApi } from '@/hooks/useCmsApi';
-import { ProjectForm } from './forms/ProjectForm';
+import { CertificationForm } from './forms/CertificationForm';
 
-interface Project {
+interface Certification {
   id: string;
-  title: string;
-  slug: string;
-  description?: string;
-  featured?: boolean;
-  isVisible?: boolean;
+  name: string;
+  issuer: string;
+  issueDate: string;
+  expiryDate?: string;
+  credentialId?: string;
+  credentialUrl?: string;
+  isVisible: boolean;
+  order: number;
   updatedAt: string;
 }
 
-export function ProjectsSection() {
+export function CertificationsSection() {
   const { request } = useCmsApi();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [certifications, setCertifications] = useState<Certification[]>([]);
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
 
-  const loadProjects = useCallback(async () => {
+  const loadCertifications = useCallback(async () => {
     setIsLoading(true);
-    const data = await request<Project[]>('/api/portfolio/projects?include_hidden=true');
+    const data = await request<Certification[]>('/api/portfolio/certifications?include_hidden=true');
     if (Array.isArray(data)) {
-      setProjects(data);
+      setCertifications(data);
     }
     setIsLoading(false);
   }, [request]);
 
   useEffect(() => {
-    loadProjects();
-  }, [loadProjects]);
+    loadCertifications();
+  }, [loadCertifications]);
 
-  const filtered = projects.filter((p) =>
-    p.title.toLowerCase().includes(search.toLowerCase())
+  const filtered = certifications.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase()) ||
+    c.issuer.toLowerCase().includes(search.toLowerCase())
   );
 
   const formatDate = (date: string) => {
     return new Intl.DateTimeFormat('id-ID', {
       dateStyle: 'short',
-      timeStyle: 'short',
     }).format(new Date(date));
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Hapus proyek ini?')) return;
+    if (!confirm('Hapus sertifikat ini?')) return;
     
-    const result = await request('/api/portfolio/projects/' + id, {
+    const result = await request('/api/portfolio/certifications/' + id, {
       method: 'DELETE',
     });
     
     if (result) {
-      setProjects(projects.filter(p => p.id !== id));
+      setCertifications(certifications.filter(c => c.id !== id));
     }
   };
 
   const handleFormClose = () => {
     setIsFormOpen(false);
-    setSelectedProject(null);
+    setSelectedCert(null);
   };
 
   const handleFormSuccess = () => {
     handleFormClose();
-    loadProjects();
+    loadCertifications();
   };
 
   return (
@@ -87,7 +90,7 @@ export function ProjectsSection() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <Input
-            placeholder="Cari proyek..."
+            placeholder="Cari sertifikat..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10"
@@ -106,7 +109,7 @@ export function ProjectsSection() {
       ) : filtered.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-gray-500">Tidak ada proyek</p>
+            <p className="text-gray-500">Tidak ada sertifikat</p>
           </CardContent>
         </Card>
       ) : (
@@ -114,36 +117,29 @@ export function ProjectsSection() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Judul</TableHead>
-                <TableHead>Unggulan</TableHead>
+                <TableHead>Sertifikat</TableHead>
+                <TableHead>Penerbit</TableHead>
+                <TableHead>Tanggal Penerbitan</TableHead>
+                <TableHead>Berlaku Hingga</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Diperbarui</TableHead>
                 <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((project) => (
-                <TableRow key={project.id}>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{project.title}</span>
-                      <span className="text-xs text-gray-500">/{project.slug}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {project.featured ? (
-                      <Badge className="bg-purple-100 text-purple-800">Unggulan</Badge>
-                    ) : (
-                      <span className="text-gray-500">-</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={project.isVisible ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
-                      {project.isVisible ? 'Terlihat' : 'Tersembunyi'}
-                    </Badge>
+              {filtered.map((cert) => (
+                <TableRow key={cert.id}>
+                  <TableCell className="font-medium">{cert.name}</TableCell>
+                  <TableCell>{cert.issuer}</TableCell>
+                  <TableCell className="text-sm text-gray-600">
+                    {formatDate(cert.issueDate)}
                   </TableCell>
                   <TableCell className="text-sm text-gray-600">
-                    {formatDate(project.updatedAt)}
+                    {cert.expiryDate ? formatDate(cert.expiryDate) : 'Seumur hidup'}
+                  </TableCell>
+                  <TableCell>
+                    <Badge className={cert.isVisible ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                      {cert.isVisible ? 'Terlihat' : 'Tersembunyi'}
+                    </Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -151,7 +147,7 @@ export function ProjectsSection() {
                         variant="ghost" 
                         size="sm"
                         onClick={() => {
-                          setSelectedProject(project);
+                          setSelectedCert(cert);
                           setIsFormOpen(true);
                         }}
                       >
@@ -160,7 +156,7 @@ export function ProjectsSection() {
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        onClick={() => handleDelete(project.id)}
+                        onClick={() => handleDelete(cert.id)}
                       >
                         <Trash2 className="h-4 w-4 text-red-600" />
                       </Button>
@@ -174,8 +170,8 @@ export function ProjectsSection() {
       )}
 
       {isFormOpen && (
-        <ProjectForm 
-          project={selectedProject}
+        <CertificationForm 
+          certification={selectedCert}
           onClose={handleFormClose}
           onSuccess={handleFormSuccess}
         />

@@ -11,14 +11,21 @@ import {
   Users,
   Code,
   MessageSquare,
+  User,
 } from 'lucide-react';
 import { useCmsApi } from '@/hooks/useCmsApi';
 
 import { ProjectsSection } from './ProjectsSection';
 import { SkillsSection } from './SkillsSection';
+import { ExperienceSection } from './ExperienceSection';
+import { EducationSection } from './EducationSection';
+import { CertificationsSection } from './CertificationsSection';
+import { LanguagesSection } from './LanguagesSection';
+import { TestimonialsSection } from './TestimonialsSection';
+import { PersonalInfoSection } from './PersonalInfoSection';
 
 export function PortfolioManager() {
-  const { request, loading } = useCmsApi();
+  const { request } = useCmsApi();
   const [stats, setStats] = useState({
     projects: 0,
     experience: 0,
@@ -56,20 +63,20 @@ export function PortfolioManager() {
   }, [request]);
 
   const statCards = [
-    { label: 'Projects', value: stats.projects, icon: FolderKanban, color: 'bg-blue-100 text-blue-700' },
-    { label: 'Experience', value: stats.experience, icon: Briefcase, color: 'bg-purple-100 text-purple-700' },
-    { label: 'Education', value: stats.education, icon: BookOpen, color: 'bg-green-100 text-green-700' },
-    { label: 'Skills', value: stats.skills, icon: Code, color: 'bg-yellow-100 text-yellow-700' },
-    { label: 'Certifications', value: stats.certifications, icon: Award, color: 'bg-pink-100 text-pink-700' },
-    { label: 'Languages', value: stats.languages, icon: Users, color: 'bg-indigo-100 text-indigo-700' },
-    { label: 'Testimonials', value: stats.testimonials, icon: MessageSquare, color: 'bg-red-100 text-red-700' },
+    { label: 'Proyek', value: stats.projects, icon: FolderKanban, color: 'bg-blue-100 text-blue-700' },
+    { label: 'Pengalaman', value: stats.experience, icon: Briefcase, color: 'bg-purple-100 text-purple-700' },
+    { label: 'Pendidikan', value: stats.education, icon: BookOpen, color: 'bg-green-100 text-green-700' },
+    { label: 'Keahlian', value: stats.skills, icon: Code, color: 'bg-yellow-100 text-yellow-700' },
+    { label: 'Sertifikat', value: stats.certifications, icon: Award, color: 'bg-pink-100 text-pink-700' },
+    { label: 'Bahasa', value: stats.languages, icon: Users, color: 'bg-indigo-100 text-indigo-700' },
+    { label: 'Testimoni', value: stats.testimonials, icon: MessageSquare, color: 'bg-red-100 text-red-700' },
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Portfolio Management</h1>
-        <p className="text-gray-600">Manage your portfolio sections</p>
+        <h1 className="text-3xl font-bold">Manajemen Portfolio</h1>
+        <p className="text-gray-600">Kelola semua bagian portfolio Anda</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -93,41 +100,32 @@ export function PortfolioManager() {
         })}
       </div>
 
-      <Tabs defaultValue="projects" className="w-full">
-        <TabsList className="grid grid-cols-4 lg:grid-cols-7">
-          <TabsTrigger value="projects">Projects</TabsTrigger>
-          <TabsTrigger value="experience">Experience</TabsTrigger>
-          <TabsTrigger value="education">Education</TabsTrigger>
-          <TabsTrigger value="skills">Skills</TabsTrigger>
-          <TabsTrigger value="certifications">Certs</TabsTrigger>
-          <TabsTrigger value="languages">Languages</TabsTrigger>
-          <TabsTrigger value="testimonials">Testimonials</TabsTrigger>
+      <Tabs defaultValue="personal" className="w-full">
+        <TabsList className="grid w-full grid-cols-4 gap-0 lg:grid-cols-8 overflow-x-auto">
+          <TabsTrigger value="personal" className="text-xs">Info</TabsTrigger>
+          <TabsTrigger value="projects" className="text-xs">Proyek</TabsTrigger>
+          <TabsTrigger value="experience" className="text-xs">Kerja</TabsTrigger>
+          <TabsTrigger value="education" className="text-xs">Pendidikan</TabsTrigger>
+          <TabsTrigger value="skills" className="text-xs">Keahlian</TabsTrigger>
+          <TabsTrigger value="certifications" className="text-xs">Sertifikat</TabsTrigger>
+          <TabsTrigger value="languages" className="text-xs">Bahasa</TabsTrigger>
+          <TabsTrigger value="testimonials" className="text-xs">Testimoni</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="personal" className="mt-6">
+          <PersonalInfoSection />
+        </TabsContent>
 
         <TabsContent value="projects" className="mt-6">
           <ProjectsSection />
         </TabsContent>
 
         <TabsContent value="experience" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Experience</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Experience management interface coming soon</p>
-            </CardContent>
-          </Card>
+          <ExperienceSection />
         </TabsContent>
 
         <TabsContent value="education" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Education</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Education management interface coming soon</p>
-            </CardContent>
-          </Card>
+          <EducationSection />
         </TabsContent>
 
         <TabsContent value="skills" className="mt-6">
@@ -135,36 +133,15 @@ export function PortfolioManager() {
         </TabsContent>
 
         <TabsContent value="certifications" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Certifications</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Certifications management interface coming soon</p>
-            </CardContent>
-          </Card>
+          <CertificationsSection />
         </TabsContent>
 
         <TabsContent value="languages" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Languages</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Languages management interface coming soon</p>
-            </CardContent>
-          </Card>
+          <LanguagesSection />
         </TabsContent>
 
         <TabsContent value="testimonials" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Testimonials</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Testimonials management interface coming soon</p>
-            </CardContent>
-          </Card>
+          <TestimonialsSection />
         </TabsContent>
       </Tabs>
     </div>
