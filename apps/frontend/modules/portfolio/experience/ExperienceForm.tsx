@@ -40,24 +40,29 @@ interface ExperienceFormProps {
   onSuccess: () => void;
 }
 
+const toDateInput = (val?: string | null) =>
+  val ? new Date(val).toISOString().split('T')[0] : '';
+
 export function ExperienceForm({ experience, onClose, onSuccess }: ExperienceFormProps) {
   const { request } = useCmsApi();
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<Experience>(
-    experience || {
-      company: '',
-      position: '',
-      location: '',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: '',
-      isCurrent: true,
-      description: '',
-      achievements: '',
-      technologies: '',
-      companyUrl: '',
-      order: 0,
-      isVisible: true,
-    }
+    experience
+      ? { ...experience, startDate: toDateInput(experience.startDate), endDate: toDateInput(experience.endDate) }
+      : {
+          company: '',
+          position: '',
+          location: '',
+          startDate: new Date().toISOString().split('T')[0],
+          endDate: '',
+          isCurrent: true,
+          description: '',
+          achievements: '',
+          technologies: '',
+          companyUrl: '',
+          order: 0,
+          isVisible: true,
+        }
   );
 
   const handleChange = (name: keyof Experience, value: string | boolean) => {

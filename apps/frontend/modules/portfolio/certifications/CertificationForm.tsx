@@ -41,19 +41,25 @@ interface CertificationFormProps {
 export function CertificationForm({ certification, onClose, onSuccess }: CertificationFormProps) {
   const { request } = useCmsApi();
   const [isSaving, setIsSaving] = useState(false);
+
+  const toDateInput = (val?: string | null) =>
+    val ? new Date(val).toISOString().split('T')[0] : '';
+
   const [formData, setFormData] = useState<Certification>(
-    certification || {
-      name: '',
-      issuer: '',
-      issueDate: new Date().toISOString().split('T')[0],
-      expiryDate: '',
-      credentialId: '',
-      credentialUrl: '',
-      description: '',
-      imageUrl: '',
-      order: 0,
-      isVisible: true,
-    }
+    certification
+      ? { ...certification, issueDate: toDateInput(certification.issueDate), expiryDate: toDateInput(certification.expiryDate) }
+      : {
+          name: '',
+          issuer: '',
+          issueDate: new Date().toISOString().split('T')[0],
+          expiryDate: '',
+          credentialId: '',
+          credentialUrl: '',
+          description: '',
+          imageUrl: '',
+          order: 0,
+          isVisible: true,
+        }
   );
 
   const handleChange = (name: keyof Certification, value: string | boolean) => {

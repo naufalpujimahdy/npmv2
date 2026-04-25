@@ -40,24 +40,29 @@ interface EducationFormProps {
   onSuccess: () => void;
 }
 
+const toDateInput = (val?: string | null) =>
+  val ? new Date(val).toISOString().split('T')[0] : '';
+
 export function EducationForm({ education, onClose, onSuccess }: EducationFormProps) {
   const { request } = useCmsApi();
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<Education>(
-    education || {
-      institution: '',
-      degree: '',
-      field: '',
-      location: '',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: '',
-      gpa: '',
-      description: '',
-      achievements: '',
-      institutionUrl: '',
-      order: 0,
-      isVisible: true,
-    }
+    education
+      ? { ...education, startDate: toDateInput(education.startDate), endDate: toDateInput(education.endDate) }
+      : {
+          institution: '',
+          degree: '',
+          field: '',
+          location: '',
+          startDate: new Date().toISOString().split('T')[0],
+          endDate: '',
+          gpa: '',
+          description: '',
+          achievements: '',
+          institutionUrl: '',
+          order: 0,
+          isVisible: true,
+        }
   );
 
   const handleChange = (name: keyof Education, value: string | boolean) => {

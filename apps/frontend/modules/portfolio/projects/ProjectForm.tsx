@@ -55,6 +55,9 @@ const statusOptions = [
   { value: 'planned', label: 'Direncanakan' },
 ];
 
+const toDateInput = (val?: string | null) =>
+  val ? new Date(val).toISOString().split('T')[0] : '';
+
 export function ProjectForm({ project, onClose, onSuccess }: ProjectFormProps) {
   const { request } = useCmsApi();
   const [isSaving, setIsSaving] = useState(false);
@@ -69,8 +72,8 @@ export function ProjectForm({ project, onClose, onSuccess }: ProjectFormProps) {
     sourceUrl: project?.sourceUrl ?? '',
     featured: project?.featured ?? false,
     status: project?.status ?? 'completed',
-    startDate: project?.startDate ?? '',
-    endDate: project?.endDate ?? '',
+    startDate: toDateInput(project?.startDate),
+    endDate: toDateInput(project?.endDate),
     order: project?.order ?? 0,
     isVisible: project?.isVisible ?? true,
   });
