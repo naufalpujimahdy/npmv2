@@ -24,6 +24,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { useCmsApi } from '@/hooks/useCmsApi';
+import { MultiImageUpload } from '@/components/ui/image-upload';
 
 interface Project {
   id?: string;
@@ -151,10 +152,12 @@ export function ProjectForm({ project, onClose, onSuccess }: ProjectFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="images">URL Gambar (dipisahkan koma)</Label>
-            <Textarea id="images" value={formData.images} onChange={(e) => handleChange('images', e.target.value)} rows={2} />
+            <Label>Gambar Proyek</Label>
+            <MultiImageUpload
+              value={formData.images || ''}
+              onChange={(val) => handleChange('images', val)}
+            />
           </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="demoUrl">Demo URL</Label>

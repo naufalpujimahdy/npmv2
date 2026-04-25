@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCmsApi } from '@/hooks/useCmsApi';
+import { ImageUpload } from '@/components/ui/image-upload';
 
 interface PersonalInfo {
   id: string;
@@ -144,8 +145,11 @@ export function PersonalInfoSection() {
         <CardHeader><CardTitle>URL & Media</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="avatarUrl">Avatar URL</Label>
-            <Input id="avatarUrl" type="url" value={formData.avatarUrl || ''} onChange={(e) => handleChange('avatarUrl', e.target.value)} />
+            <Label>Avatar</Label>
+            <ImageUpload
+              value={formData.avatarUrl || ''}
+              onChange={(url) => handleChange('avatarUrl', url)}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="resumeUrl">Resume URL</Label>

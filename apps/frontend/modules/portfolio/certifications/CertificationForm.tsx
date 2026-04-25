@@ -17,6 +17,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { useCmsApi } from '@/hooks/useCmsApi';
+import { ImageUpload } from '@/components/ui/image-upload';
 
 interface Certification {
   id?: string;
@@ -163,12 +164,10 @@ export function CertificationForm({ certification, onClose, onSuccess }: Certifi
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="imageUrl">URL Gambar</Label>
-            <Input
-              id="imageUrl"
-              type="url"
+            <Label>Gambar Sertifikat</Label>
+            <ImageUpload
               value={formData.imageUrl || ''}
-              onChange={(e) => handleChange('imageUrl', e.target.value)}
+              onChange={(url) => handleChange('imageUrl', url)}
             />
           </div>
 

@@ -17,6 +17,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { useCmsApi } from '@/hooks/useCmsApi';
+import { ImageUpload } from '@/components/ui/image-upload';
 
 interface Testimonial {
   id?: string;
@@ -134,12 +135,10 @@ export function TestimonialForm({ testimonial, onClose, onSuccess }: Testimonial
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="avatarUrl">Avatar URL</Label>
-            <Input
-              id="avatarUrl"
-              type="url"
+            <Label>Avatar</Label>
+            <ImageUpload
               value={formData.avatarUrl || ''}
-              onChange={(e) => handleChange('avatarUrl', e.target.value)}
+              onChange={(url) => handleChange('avatarUrl', url)}
             />
           </div>
 

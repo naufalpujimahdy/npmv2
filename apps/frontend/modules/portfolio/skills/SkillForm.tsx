@@ -23,6 +23,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { useCmsApi } from '@/hooks/useCmsApi';
+import { ImageUpload } from '@/components/ui/image-upload';
 
 interface Skill {
   id?: string;
@@ -150,12 +151,10 @@ export function SkillForm({ skill, onClose, onSuccess }: SkillFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="iconUrl">Icon URL</Label>
-            <Input
-              id="iconUrl"
-              type="url"
+            <Label>Icon</Label>
+            <ImageUpload
               value={formData.iconUrl || ''}
-              onChange={(e) => handleChange('iconUrl', e.target.value)}
+              onChange={(url) => handleChange('iconUrl', url)}
             />
           </div>
 

@@ -142,9 +142,9 @@ export default function PortfolioHome() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project: any) => (
             <div key={project.id} className="bg-slate-700 rounded-lg overflow-hidden border border-slate-600 hover:border-blue-500 transition group">
-              {project.images && JSON.parse(project.images)[0] && (
+              {project.images && project.images.split(',')[0]?.trim() && (
                 <img
-                  src={JSON.parse(project.images)[0]}
+                  src={project.images.split(',')[0].trim()}
                   alt={project.title}
                   className="w-full h-48 object-cover group-hover:scale-105 transition"
                 />
