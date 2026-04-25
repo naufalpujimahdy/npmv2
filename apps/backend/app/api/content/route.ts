@@ -1,13 +1,9 @@
 import type { Prisma } from '@prisma/client';
 import { ContentStatus } from '@prisma/client';
 
-import {
-  createContentEntry,
-  listContentEntries,
-} from '@/src/models/ContentEntry';
+import { createContentEntry, listContentEntries } from '@/src/modules/content/model';
 import {
   jsonResponse,
-  optionsResponse,
   parseJsonBody,
   requireAdminRequest,
   withErrorHandling,
@@ -17,7 +13,7 @@ import {
   parseContentStatusFilter,
   parseContentTypeFilter,
   validateContentInput,
-} from '@/src/lib/content';
+} from '@/src/modules/content/validation';
 
 export async function GET(request: Request) {
   return withErrorHandling(async () => {
@@ -42,10 +38,7 @@ export async function GET(request: Request) {
     return jsonResponse({
       ok: true,
       data: entries,
-      meta: {
-        isAdmin,
-        total: entries.length,
-      },
+      meta: { isAdmin, total: entries.length },
     });
   });
 }
@@ -58,16 +51,6 @@ export async function POST(request: Request) {
     const data = validateContentInput(body);
     const entry = await createContentEntry(data as Prisma.ContentEntryCreateInput);
 
-    return jsonResponse(
-      {
-        ok: true,
-        data: entry,
-      },
-      { status: 201 }
-    );
+    return jsonResponse({ ok: true, data: entry }, { status: 201 });
   });
-}
-
-export function OPTIONS() {
-  return optionsResponse();
 }

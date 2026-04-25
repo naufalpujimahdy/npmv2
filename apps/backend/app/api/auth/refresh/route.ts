@@ -1,14 +1,9 @@
-import { getUserById } from '@/src/models/User';
+import { getUserById } from '@/src/modules/auth/model';
 import { withErrorHandling, ApiError } from '@/src/lib/error-handler';
-import { sanitizeUser } from '@/src/lib/auth';
-import { generateAccessToken, verifyRefreshToken, extractTokenFromHeader } from '@/src/lib/jwt-refresh';
-import { parseJsonBody, optionsResponse } from '@/src/lib/api';
-import { corsHeaders, handleCorsPreFlight } from '@/src/lib/cors';
+import { sanitizeUser, generateAccessToken, verifyRefreshToken } from '@/src/modules/auth/service';
+import { parseJsonBody } from '@/src/lib/api';
 
 export async function POST(request: Request) {
-  const corsPreFlight = handleCorsPreFlight(request);
-  if (corsPreFlight) return corsPreFlight;
-
   return withErrorHandling(request, async () => {
     const body = await parseJsonBody(request);
     const refreshToken = typeof body.refreshToken === 'string' ? body.refreshToken : null;
@@ -33,18 +28,6 @@ export async function POST(request: Request) {
       email: user.email,
     });
 
-    return [
-      {
-        accessToken: newAccessToken,
-        user: sanitizeUser(user),
-      },
-      { status: 200 },
-    ];
+    return [{ accessToken: newAccessToken, user: sanitizeUser(user) }, { status: 200 }];
   });
-}
-
-export function OPTIONS(request: Request) {
-  const corsPreFlight = handleCorsPreFlight(request);
-  if (corsPreFlight) return corsPreFlight;
-  return optionsResponse();
 }

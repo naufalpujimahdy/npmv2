@@ -1,45 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
-import prisma  from "@/src/lib/prisma";
-import { withErrorHandling } from "@/src/lib/error-handler";
-import { corsHeaders, handleCorsPreFlight } from "@/src/lib/cors";
-import { contactMessageSchema } from "@/src/lib/portfolio-validation";
-import { z } from "zod";
+import { NextRequest } from 'next/server';
+import prisma from '@/src/lib/prisma';
+import { withErrorHandling } from '@/src/lib/error-handler';
+import { contactMessageSchema } from '@/src/modules/portfolio/validation';
 
-async function getContactMessages(request: NextRequest) {
-  const messages = await prisma.contactMessage.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 100,
-  });
-
-  return NextResponse.json({ ok: true, data: messages }, { headers: corsHeaders(request) });
-}
-
-async function createContactMessage(request: NextRequest) {
-  const body = await request.json();
-
-  try {
-    const validated = contactMessageSchema.parse(body);
-    const message = await prisma.contactMessage.create({
-      data: validated,
+export async function GET(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    const messages = await prisma.contactMessage.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 100,
     });
-
-    return NextResponse.json({ ok: true, data: message }, { status: 201, headers: corsHeaders(request) });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { ok: false, error: "Validation failed", details: error.errors },
-        { status: 400, headers: corsHeaders(request) }
-      );
-    }
-    throw error;
-  }
+    return [messages, { status: 200 }];
+  });
 }
 
-export const GET = withErrorHandling(getContactMessages);
-export const POST = withErrorHandling(createContactMessage);
-
-export function OPTIONS(request: Request) {
-  const corsPreFlight = handleCorsPreFlight(request);
-  if (corsPreFlight) return corsPreFlight;
-  return new Response(null, { status: 204 });
+export async function POST(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    const body = await request.json();
+    const validated = contactMessageSchema.parse(body);
+    const message = await prisma.contactMessage.create({ data: validated });
+    return [message, { status: 201 }];
+  });
 }

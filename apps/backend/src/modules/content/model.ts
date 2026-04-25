@@ -1,6 +1,5 @@
 import type { Prisma } from '@prisma/client';
-
-import prisma from '../lib/prisma';
+import prisma from '../../lib/prisma';
 
 export const listContentEntries = async (
   where: Prisma.ContentEntryWhereInput = {}
@@ -27,10 +26,7 @@ export const updateContentEntry = async (
   id: number,
   data: Prisma.ContentEntryUpdateInput
 ) => {
-  return prisma.contentEntry.update({
-    where: { id },
-    data,
-  });
+  return prisma.contentEntry.update({ where: { id }, data });
 };
 
 export const deleteContentEntry = async (id: number) => {

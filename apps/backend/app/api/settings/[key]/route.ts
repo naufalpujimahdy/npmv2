@@ -1,19 +1,6 @@
-import  Prisma  from '@prisma/client';
-
-import {
-  deleteSiteSetting,
-  getSiteSettingByKey,
-  upsertSiteSetting,
-} from '@/src/models/SiteSetting';
-import {
-  errorResponse,
-  jsonResponse,
-  optionsResponse,
-  parseJsonBody,
-  requireAdminRequest,
-  withErrorHandling,
-} from '@/src/lib/api';
-import { validateSettingInput } from '@/src/lib/content';
+import { deleteSiteSetting, getSiteSettingByKey, upsertSiteSetting } from '@/src/modules/settings/model';
+import { errorResponse, jsonResponse, parseJsonBody, requireAdminRequest, withErrorHandling } from '@/src/lib/api';
+import { validateSettingInput } from '@/src/modules/settings/validation';
 
 type RouteContext = {
   params: Promise<{ key: string }>;
@@ -23,15 +10,8 @@ export async function GET(_request: Request, { params }: RouteContext) {
   return withErrorHandling(async () => {
     const { key } = await params;
     const setting = await getSiteSettingByKey(key);
-
-    if (!setting) {
-      return errorResponse(404, 'Setting tidak ditemukan.');
-    }
-
-    return jsonResponse({
-      ok: true,
-      data: setting,
-    });
+    if (!setting) return errorResponse(404, 'Setting tidak ditemukan.');
+    return jsonResponse({ ok: true, data: setting });
   });
 }
 
@@ -48,10 +28,7 @@ export async function PUT(request: Request, { params }: RouteContext) {
       description: (data.description as string | null | undefined) ?? null,
     });
 
-    return jsonResponse({
-      ok: true,
-      data: setting,
-    });
+    return jsonResponse({ ok: true, data: setting });
   });
 }
 
@@ -62,13 +39,6 @@ export async function DELETE(request: Request, { params }: RouteContext) {
     const { key } = await params;
     await deleteSiteSetting(key);
 
-    return jsonResponse({
-      ok: true,
-      message: 'Setting berhasil dihapus.',
-    });
+    return jsonResponse({ ok: true, message: 'Setting berhasil dihapus.' });
   });
-}
-
-export function OPTIONS() {
-  return optionsResponse();
 }

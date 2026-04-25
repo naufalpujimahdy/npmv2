@@ -1,6 +1,5 @@
 import type { Prisma } from '@prisma/client';
-
-import prisma from '../lib/prisma';
+import prisma from '../../lib/prisma';
 
 export const listSiteSettings = async (
   where: Prisma.SiteSettingWhereInput = {}
