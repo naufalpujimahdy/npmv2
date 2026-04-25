@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import prisma from '@/src/lib/prisma';
-import { withErrorHandling, ApiError } from '@/src/lib/error-handler';
+import { withErrorHandling, ApiError, requireApiKey } from '@/src/lib/error-handler';
 
 export async function GET(request: NextRequest) {
   return withErrorHandling(request, async () => {
@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   return withErrorHandling(request, async () => {
+    requireApiKey(request);
     const body = await request.json();
     const personalInfo = await prisma.personalInfo.upsert({
       where: { email: body.email },

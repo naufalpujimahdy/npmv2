@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import prisma from '@/src/lib/prisma';
-import { withErrorHandling } from '@/src/lib/error-handler';
+import { withErrorHandling, requireApiKey } from '@/src/lib/error-handler';
 import { experienceSchema } from '@/src/modules/portfolio/validation';
 
 export async function GET(request: NextRequest) {
@@ -16,13 +16,14 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   return withErrorHandling(request, async () => {
+    requireApiKey(request);
     const body = await request.json();
     const validated = experienceSchema.parse(body);
     const experience = await prisma.experience.create({
       data: {
         ...validated,
-        startDate: new Date(validated.startDate),
-        endDate: validated.endDate ? new Date(validated.endDate) : null,
+        startDate: new Date(validated.startDate as string),
+        endDate: validated.endDate ? new Date(validated.endDate as string) : null,
       },
     });
     return [experience, { status: 201 }];

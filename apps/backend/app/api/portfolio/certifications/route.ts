@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import prisma from '@/src/lib/prisma';
-import { withErrorHandling } from '@/src/lib/error-handler';
+import { withErrorHandling, requireApiKey } from '@/src/lib/error-handler';
 import { certificationSchema } from '@/src/modules/portfolio/validation';
 
 export async function GET(request: NextRequest) {
@@ -16,9 +16,16 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   return withErrorHandling(request, async () => {
+    requireApiKey(request);
     const body = await request.json();
     const validated = certificationSchema.parse(body);
-    const certification = await prisma.certification.create({ data: validated });
+    const certification = await prisma.certification.create({
+      data: {
+        ...validated,
+        issueDate: new Date(validated.issueDate),
+        expiryDate: validated.expiryDate ? new Date(validated.expiryDate) : null,
+      },
+    });
     return [certification, { status: 201 }];
   });
 }

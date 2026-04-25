@@ -1,5 +1,12 @@
 import { ZodError } from 'zod';
 
+export function requireApiKey(request: Request) {
+  const key = request.headers.get('x-api-key');
+  if (!key || key !== process.env.ADMIN_API_KEY) {
+    throw new ApiError(401, 'API key tidak valid.', 'UNAUTHORIZED');
+  }
+}
+
 export class ApiError extends Error {
   constructor(
     public statusCode: number,

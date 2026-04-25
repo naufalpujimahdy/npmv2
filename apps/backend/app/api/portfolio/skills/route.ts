@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import prisma from '@/src/lib/prisma';
-import { withErrorHandling } from '@/src/lib/error-handler';
+import { withErrorHandling, requireApiKey } from '@/src/lib/error-handler';
 import { skillSchema } from '@/src/modules/portfolio/validation';
 
 export async function GET(request: NextRequest) {
@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   return withErrorHandling(request, async () => {
+    requireApiKey(request);
     const body = await request.json();
     const validated = skillSchema.parse(body);
     const skill = await prisma.skill.create({ data: validated });

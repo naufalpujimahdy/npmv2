@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import prisma from '@/src/lib/prisma';
-import { withErrorHandling } from '@/src/lib/error-handler';
+import { withErrorHandling, requireApiKey } from '@/src/lib/error-handler';
 import { projectSchema } from '@/src/modules/portfolio/validation';
 
 export async function GET(request: NextRequest) {
@@ -19,14 +19,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   return withErrorHandling(request, async () => {
+    requireApiKey(request);
     const body = await request.json();
     const validated = projectSchema.parse(body);
 
     const project = await prisma.project.create({
       data: {
         ...validated,
-        startDate: validated.startDate ? new Date(validated.startDate) : null,
-        endDate: validated.endDate ? new Date(validated.endDate) : null,
+        startDate: validated.startDate ? new Date(validated.startDate as string) : null,
+        endDate: validated.endDate ? new Date(validated.endDate as string) : null,
       },
     });
     return [project, { status: 201 }];

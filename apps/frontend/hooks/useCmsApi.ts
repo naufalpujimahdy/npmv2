@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY || '';
 
 export interface ApiResponse<T> {
   ok: boolean;
@@ -34,12 +35,12 @@ export function useCmsApi() {
           method: options.method || 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'x-api-key': API_KEY,
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: options.body ? JSON.stringify(options.body) : undefined,
         });
-        console.log(options.method);
-        
+
         const data: ApiResponse<T> = await response.json();
 
         if (!response.ok) {

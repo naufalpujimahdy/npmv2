@@ -29,7 +29,7 @@ function getAllowedOrigins(): string[] {
 }
 
 const ALLOW_METHODS = 'GET, POST, PUT, PATCH, DELETE, OPTIONS';
-const ALLOW_HEADERS = 'Content-Type, Authorization, X-Requested-With';
+const ALLOW_HEADERS = 'Content-Type, Authorization, X-Requested-With, X-Api-Key';
 
 export function middleware(request: NextRequest) {
   const origin = request.headers.get('origin');
