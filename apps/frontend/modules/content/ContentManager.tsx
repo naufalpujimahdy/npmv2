@@ -8,7 +8,6 @@ import {
   Edit2,
   Trash2,
   Eye,
-  EyeOff,
   Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -82,7 +81,7 @@ export function ContentManager() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Content Management</h1>
-          <p className="text-gray-600">Manage your portfolio content</p>
+          <p className="text-muted-foreground">Manage your portfolio content</p>
         </div>
         <Button
           onClick={() => router.push('/cms/content/new')}
@@ -93,10 +92,10 @@ export function ContentManager() {
         </Button>
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="rounded-lg border bg-card p-6">
         <div className="mb-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search content..."
               value={search}
@@ -108,11 +107,11 @@ export function ContentManager() {
 
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         ) : filtered.length === 0 ? (
           <div className="py-12 text-center">
-            <p className="text-gray-500">No content found</p>
+            <p className="text-muted-foreground">No content found</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -138,7 +137,7 @@ export function ContentManager() {
                         {entry.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-gray-600">
+                    <TableCell className="text-sm text-muted-foreground">
                       {formatDate(entry.updatedAt)}
                     </TableCell>
                     <TableCell className="text-right">
@@ -156,7 +155,7 @@ export function ContentManager() {
                           <Eye className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="sm">
-                          <Trash2 className="h-4 w-4 text-red-600" />
+                          <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       </div>
                     </TableCell>

@@ -29,7 +29,6 @@ export function ContentForm({ id, isNew }: ContentFormProps) {
   useEffect(() => {
     if (id && !isNew) {
       const loadContent = async () => {
-        // Load content from API
         const data = await request(`/api/content/${id}`);
         if (data) {
           setForm(data as any);
@@ -77,7 +76,7 @@ export function ContentForm({ id, isNew }: ContentFormProps) {
           <h1 className="text-3xl font-bold">
             {isNew ? 'Create Content' : 'Edit Content'}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             {isNew ? 'Add new content to your portfolio' : 'Update your content'}
           </p>
         </div>
@@ -123,7 +122,7 @@ export function ContentForm({ id, isNew }: ContentFormProps) {
                   setForm((prev) => ({ ...prev, content: e.target.value }))
                 }
                 placeholder="Your content here..."
-                className="h-64 w-full rounded-md border border-gray-200 p-3 font-mono text-sm"
+                className="h-64 w-full rounded-md border border-input bg-background p-3 font-mono text-sm"
               />
             </div>
 
@@ -135,7 +134,7 @@ export function ContentForm({ id, isNew }: ContentFormProps) {
                   onChange={(e) =>
                     setForm((prev) => ({ ...prev, type: e.target.value }))
                   }
-                  className="w-full rounded-md border border-gray-200 px-3 py-2"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 >
                   <option>ARTICLE</option>
                   <option>PAGE</option>
@@ -150,7 +149,7 @@ export function ContentForm({ id, isNew }: ContentFormProps) {
                   onChange={(e) =>
                     setForm((prev) => ({ ...prev, status: e.target.value }))
                   }
-                  className="w-full rounded-md border border-gray-200 px-3 py-2"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 >
                   <option>DRAFT</option>
                   <option>PUBLISHED</option>
