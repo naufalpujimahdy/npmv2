@@ -171,7 +171,7 @@ export default function PortfolioHome() {
     <main className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
 
       {/* ── HERO ── */}
-      <section className="px-6 lg:px-8 py-20 max-w-350 mx-auto">
+      <section className="px-6 lg:px-8 py-20 max-w-4xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
           <motion.div initial="hidden" animate="visible" variants={slideLeft}>
@@ -233,7 +233,7 @@ export default function PortfolioHome() {
       <Divider />
 
       {/* ── ABOUT ── */}
-      <section className="px-6 lg:px-8 py-16 max-w-350 mx-auto">
+      <section className="px-6 lg:px-8 py-16 max-w-4xl mx-auto">
         <motion.h2 className="text-4xl lg:text-5xl font-black tracking-tight mb-10"
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           About Me
@@ -289,7 +289,7 @@ export default function PortfolioHome() {
       <Divider />
 
       {/* ── SKILLS ── */}
-      <section className="px-6 lg:px-8 py-16 max-w-350 mx-auto">
+      <section className="px-6 lg:px-8 py-16 max-w-4xl mx-auto">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           <h2 className="text-4xl lg:text-5xl font-black tracking-tight mb-2">Skills</h2>
           <p className="text-gray-500 font-medium mb-8 text-sm">Core technologies and tools I work with daily</p>
@@ -312,7 +312,7 @@ export default function PortfolioHome() {
       <Divider />
 
       {/* ── EXPERIENCE (tree timeline) ── */}
-      <section className="px-6 lg:px-8 py-16 max-w-350 mx-auto">
+      <section className="px-6 lg:px-8 py-16 max-w-4xl mx-auto">
         <motion.h2 className="text-4xl lg:text-5xl font-black tracking-tight mb-14"
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           Professional Journey
@@ -356,7 +356,7 @@ export default function PortfolioHome() {
       <Divider />
 
       {/* ── PROJECTS ── */}
-      <section className="px-6 lg:px-8 py-16 max-w-350 mx-auto">
+      <section className="px-6 lg:px-8 py-16 max-w-4xl mx-auto">
         <motion.h2 className="text-4xl lg:text-5xl font-black tracking-tight mb-12"
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           Featured Works
@@ -391,7 +391,7 @@ export default function PortfolioHome() {
       <Divider />
 
       {/* ── CTA ── */}
-      <section className="px-6 lg:px-8 py-24 max-w-225 mx-auto text-center">
+      <section className="px-6 lg:px-8 py-24 max-w-4xl mx-auto text-center">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
           <motion.h2 variants={fadeUp}
             className="text-5xl lg:text-6xl font-black tracking-[-1.5px] leading-tight mb-6">
@@ -411,7 +411,7 @@ export default function PortfolioHome() {
 
       {/* ── FOOTER ── */}
       <footer className="px-6 lg:px-8 py-12 border-t-2 border-gray-100 bg-gray-50">
-        <div className="max-w-350 mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center">
           <p className="text-xs uppercase tracking-widest font-bold text-gray-400 mb-6">Connect With Me</p>
           <div className="flex justify-center gap-8 mb-8 flex-wrap">
             {personal?.email && (
