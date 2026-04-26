@@ -3,7 +3,7 @@ ALTER TABLE `ContentEntry` MODIFY `status` ENUM('DRAFT', 'PUBLISHED', 'ARCHIVED'
     MODIFY `locale` VARCHAR(191) NOT NULL DEFAULT 'id';
 
 -- AlterTable
-ALTER TABLE `project` MODIFY `status` VARCHAR(191) NOT NULL DEFAULT 'completed';
+ALTER TABLE `Project` MODIFY `status` VARCHAR(191) NOT NULL DEFAULT 'completed';
 
 -- CreateTable
 CREATE TABLE `ApiLog` (
