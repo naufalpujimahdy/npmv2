@@ -39,6 +39,9 @@ COPY apps/frontend/package.json ./apps/frontend/
 # Install production dependencies only
 RUN pnpm install --prod --frozen-lockfile
 
+# Copy generated Prisma client from builder
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+
 # Copy Prisma schema
 COPY apps/backend/prisma ./apps/backend/prisma
 
