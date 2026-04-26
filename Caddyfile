@@ -1,38 +1,23 @@
-# Caddy configuration for Portfolio CMS
-# This file handles SSL/TLS and reverse proxying
-
 {$DOMAIN:naufalpujimahdy.id} {
-  # Main domain - serves the frontend
-  reverse_proxy frontend:3001 {
-    # Headers for proper proxying
-    header_up Host {host}
-    header_up X-Real-IP {remote_host}
-    header_up X-Forwarded-For {remote_host}
-    header_up X-Forwarded-Proto {scheme}
-    
-    # Keep connection alive
-    header_up Connection "upgrade"
-    header_up Upgrade "websocket"
+  handle /api* {
+    reverse_proxy portfolio-backend:3000 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
+  }
+
+  handle {
+    reverse_proxy portfolio-frontend:3001 {
+      header_up Host {host}
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-For {remote_host}
+      header_up X-Forwarded-Proto {scheme}
+    }
   }
 }
 
-{$DOMAIN:naufalpujimahdy.id}/api* {
-  # API routes - serves the backend
-  reverse_proxy backend:3000 {
-    # Headers for proper proxying
-    header_up Host {host}
-    header_up X-Real-IP {remote_host}
-    header_up X-Forwarded-For {remote_host}
-    header_up X-Forwarded-Proto {scheme}
-    
-    # CORS headers
-    header_down Access-Control-Allow-Origin "*"
-    header_down Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-    header_down Access-Control-Allow-Headers "Content-Type, Authorization"
-  }
-}
-
-# www subdomain redirect
 www.{$DOMAIN:naufalpujimahdy.id} {
   redir https://{$DOMAIN:naufalpujimahdy.id}{uri} permanent
 }

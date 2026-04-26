@@ -49,7 +49,7 @@ COPY --from=builder /app/apps/backend/next.config.js ./apps/backend/
 COPY --from=builder /app/apps/backend/middleware.ts ./apps/backend/
 
 # Create a startup script to handle migrations
-RUN echo '#!/bin/sh\nset -e\n\necho "Running database migrations..."\npnpm --dir apps/backend exec prisma migrate deploy\n\necho "Starting backend..."\npnpm --dir apps/backend start' > /app/start.sh && \
+RUN printf '#!/bin/sh\nset -e\n\necho "Running database migrations..."\npnpm --dir apps/backend exec prisma migrate deploy\n\necho "Starting backend..."\nexec pnpm --dir apps/backend start\n' > /app/start.sh && \
     chmod +x /app/start.sh
 
 EXPOSE 3000
