@@ -1,4 +1,3 @@
-import { optionsResponse } from '@/src/lib/api';
 import { NextResponse } from 'next/server';
 
 const hasDatabaseUrl =
@@ -21,6 +20,3 @@ export function GET() {
   });
 }
 
-export function OPTIONS() {
-  return optionsResponse();
-}

@@ -1,5 +1,11 @@
 import { ZodError } from 'zod';
-import { corsHeaders } from '@/src/lib/cors';
+
+export function requireApiKey(request: Request) {
+  const key = request.headers.get('x-api-key');
+  if (!key || key !== process.env.ADMIN_API_KEY) {
+    throw new ApiError(401, 'API key tidak valid.', 'UNAUTHORIZED');
+  }
+}
 
 export class ApiError extends Error {
   constructor(
@@ -21,97 +27,58 @@ export type ErrorResponse = {
   timestamp: string;
 };
 
-export function errorResponse(
+function buildErrorBody(
   statusCode: number,
   error: string,
   code?: string,
   details?: Record<string, string[]>
-): [ErrorResponse, { status: number; headers?: HeadersInit }] {
+): [ErrorResponse, number] {
   return [
-    {
-      ok: false,
-      error,
-      code,
-      details,
-      timestamp: new Date().toISOString(),
-    },
-    { status: statusCode },
+    { ok: false, error, code, details, timestamp: new Date().toISOString() },
+    statusCode,
   ];
 }
 
-export function handleValidationError(error: ZodError) {
+function handleValidationError(error: ZodError): Record<string, string[]> {
   const details: Record<string, string[]> = {};
-
   for (const issue of error.issues) {
     const path = issue.path.join('.');
-    if (!details[path]) {
-      details[path] = [];
-    }
-    details[path].push(issue.message);
+    (details[path] ??= []).push(issue.message);
   }
-
   return details;
 }
 
 export async function withErrorHandling<T>(
-  request: Request,
-  handler: () => Promise<[T, { status?: number }] | Response>
+  _request: Request,
+  handler: () => Promise<[T, { status?: number; headers?: HeadersInit }] | Response>
 ): Promise<Response> {
   try {
     const result = await handler();
 
-    if (result instanceof Response) {
-      return result;
-    }
+    if (result instanceof Response) return result;
 
     const [data, options] = result;
     return Response.json(
       { ok: true, data },
       {
         status: options.status ?? 200,
-        headers: corsHeaders(request),
+        headers: options.headers,
       }
     );
   } catch (error) {
     if (error instanceof ApiError) {
-      const [response, options] = errorResponse(
-        error.statusCode,
-        error.message,
-        error.code
-      );
-      return Response.json(response, {
-        status: options.status,
-        headers: {
-          ...corsHeaders(request),
-          ...(error.headers ?? {}),
-        },
-      });
+      const [body, status] = buildErrorBody(error.statusCode, error.message, error.code);
+      return Response.json(body, { status, headers: error.headers });
     }
 
     if (error instanceof ZodError) {
       const details = handleValidationError(error);
-      const [response, options] = errorResponse(
-        400,
-        'Validasi input gagal.',
-        'VALIDATION_ERROR',
-        details
-      );
-      return Response.json(response, {
-        ...options,
-        headers: corsHeaders(request),
-      });
+      const [body, status] = buildErrorBody(400, 'Validasi input gagal.', 'VALIDATION_ERROR', details);
+      return Response.json(body, { status });
     }
 
     console.error('Unhandled error:', error);
-
-    const [response, options] = errorResponse(
-      500,
-      'Terjadi kesalahan server.',
-      'INTERNAL_SERVER_ERROR'
-    );
-    return Response.json(response, {
-      ...options,
-      headers: corsHeaders(request),
-    });
+    const [body, status] = buildErrorBody(500, 'Terjadi kesalahan server.', 'INTERNAL_SERVER_ERROR');
+    return Response.json(body, { status });
   }
 }

@@ -1,18 +1,5 @@
 import { NextResponse } from 'next/server';
 
-const ADMIN_API_KEY_HEADER = 'x-admin-api-key';
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3001';
-
-function getCorsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': FRONTEND_URL,
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers':
-      'Content-Type, Authorization, x-admin-api-key',
-    Vary: 'Origin',
-  };
-}
-
 export class ApiError extends Error {
   status: number;
 
@@ -23,30 +10,16 @@ export class ApiError extends Error {
 }
 
 export function jsonResponse(data: unknown, init?: ResponseInit) {
-  return NextResponse.json(data, {
-    ...init,
-    headers: {
-      ...getCorsHeaders(),
-      ...(init?.headers ?? {}),
-    },
-  });
+  return NextResponse.json(data, init);
 }
 
 export function errorResponse(status: number, message: string) {
-  return jsonResponse(
-    {
-      ok: false,
-      error: message,
-    },
-    { status }
-  );
+  return jsonResponse({ ok: false, error: message }, { status });
 }
 
+/** Simple 204 No Content for OPTIONS — middleware adds CORS headers. */
 export function optionsResponse() {
-  return new NextResponse(null, {
-    status: 204,
-    headers: getCorsHeaders(),
-  });
+  return new NextResponse(null, { status: 204 });
 }
 
 export async function parseJsonBody(request: Request) {
@@ -58,32 +31,21 @@ export async function parseJsonBody(request: Request) {
 }
 
 export function getAdminApiKeyFromRequest(request: Request) {
-  return request.headers.get(ADMIN_API_KEY_HEADER);
+  return request.headers.get('x-admin-api-key');
 }
 
 export function isAdminRequest(request: Request) {
   const configuredApiKey = process.env.ADMIN_API_KEY;
-
-  if (!configuredApiKey) {
-    return false;
-  }
-
+  if (!configuredApiKey) return false;
   return getAdminApiKeyFromRequest(request) === configuredApiKey;
 }
 
 export function requireAdminRequest(request: Request) {
   if (!process.env.ADMIN_API_KEY) {
-    throw new ApiError(
-      500,
-      'ADMIN_API_KEY belum dikonfigurasi di environment backend.'
-    );
+    throw new ApiError(500, 'ADMIN_API_KEY belum dikonfigurasi di environment backend.');
   }
-
   if (!isAdminRequest(request)) {
-    throw new ApiError(
-      401,
-      'Akses ditolak. Sertakan header x-admin-api-key yang valid.'
-    );
+    throw new ApiError(401, 'Akses ditolak. Sertakan header x-admin-api-key yang valid.');
   }
 }
 
@@ -96,9 +58,7 @@ export async function withErrorHandling<T>(
     if (error instanceof ApiError) {
       return errorResponse(error.status, error.message);
     }
-
     console.error(error);
-
     return errorResponse(500, 'Terjadi kesalahan internal pada server.');
   }
 }

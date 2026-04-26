@@ -1,26 +1,31 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/src/lib/prisma";
-import { withErrorHandling } from "@/src/lib/error-handler";
-import { corsHeaders } from "@/src/lib/cors";
+import { NextRequest } from 'next/server';
+import prisma from '@/src/lib/prisma';
+import { withErrorHandling, requireApiKey } from '@/src/lib/error-handler';
+import { certificationSchema } from '@/src/modules/portfolio/validation';
 
-async function getCertifications(request: NextRequest) {
-  const certifications = await prisma.certification.findMany({
-    where: { isVisible: true },
-    orderBy: { order: "asc" },
+export async function GET(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    const includeHidden = new URL(request.url).searchParams.get('include_hidden') === 'true';
+    const certifications = await prisma.certification.findMany({
+      where: includeHidden ? {} : { isVisible: true },
+      orderBy: { order: 'asc' },
+    });
+    return [certifications, { status: 200 }];
   });
-
-  return NextResponse.json({ ok: true, data: certifications }, { headers: corsHeaders(request) });
 }
 
-async function createCertification(request: NextRequest) {
-  const body = await request.json();
-
-  const certification = await prisma.certification.create({
-    data: body,
+export async function POST(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    requireApiKey(request);
+    const body = await request.json();
+    const validated = certificationSchema.parse(body);
+    const certification = await prisma.certification.create({
+      data: {
+        ...validated,
+        issueDate: new Date(validated.issueDate),
+        expiryDate: validated.expiryDate ? new Date(validated.expiryDate) : null,
+      },
+    });
+    return [certification, { status: 201 }];
   });
-
-  return NextResponse.json({ ok: true, data: certification }, { status: 201, headers: corsHeaders(request) });
 }
-
-export const GET = withErrorHandling(getCertifications);
-export const POST = withErrorHandling(createCertification);

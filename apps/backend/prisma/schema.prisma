@@ -102,8 +102,8 @@ model Experience {
   endDate      DateTime?
   isCurrent    Boolean   @default(false)
   description  String    @db.LongText
-  achievements String    @db.LongText // JSON array stored as string
-  technologies String    @db.LongText // JSON array stored as string
+  achievements String?   @db.LongText
+  technologies String?   @db.LongText
   companyUrl   String?
   order        Int       @default(0)
   isVisible    Boolean   @default(true)
@@ -196,5 +196,15 @@ model ContactMessage {
   subject   String
   message   String   @db.LongText
   isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model ApiLog {
+  id        String   @id @default(cuid())
+  method    String
+  path      String
+  status    Int
+  duration  Int
+  userId    Int?
   createdAt DateTime @default(now())
 }

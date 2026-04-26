@@ -1,26 +1,28 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/src/lib/prisma";
-import { withErrorHandling } from "@/src/lib/error-handler";
-import { corsHeaders } from "@/src/lib/cors";
+import { NextRequest } from 'next/server';
+import prisma from '@/src/lib/prisma';
+import { withErrorHandling, requireApiKey } from '@/src/lib/error-handler';
+import { skillSchema } from '@/src/modules/portfolio/validation';
 
-async function getSkills(request: NextRequest) {
-  const skills = await prisma.skill.findMany({
-    where: { isVisible: true },
-    orderBy: { order: "asc" },
+export async function GET(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get('category');
+    const includeHidden = searchParams.get('include_hidden') === 'true';
+
+    const where: Record<string, unknown> = includeHidden ? {} : { isVisible: true };
+    if (category) where.category = category;
+
+    const skills = await prisma.skill.findMany({ where, orderBy: { order: 'asc' } });
+    return [skills, { status: 200 }];
   });
-
-  return NextResponse.json({ ok: true, data: skills }, { headers: corsHeaders(request) });
 }
 
-async function createSkill(request: NextRequest) {
-  const body = await request.json();
-
-  const skill = await prisma.skill.create({
-    data: body,
+export async function POST(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    requireApiKey(request);
+    const body = await request.json();
+    const validated = skillSchema.parse(body);
+    const skill = await prisma.skill.create({ data: validated });
+    return [skill, { status: 201 }];
   });
-
-  return NextResponse.json({ ok: true, data: skill }, { status: 201, headers: corsHeaders(request) });
 }
-
-export const GET = withErrorHandling(getSkills);
-export const POST = withErrorHandling(createSkill);

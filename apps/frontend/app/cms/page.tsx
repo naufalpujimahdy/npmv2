@@ -1,5 +1,10 @@
-import { CmsShell } from '@/components/cms/CmsShell';
+import { CmsAppLayout } from '@/components/cms/CmsAppLayout';
+import { DashboardOverview } from '@/modules/dashboard/DashboardOverview';
 
 export default function CmsDashboardPage() {
-  return <CmsShell />;
+  return (
+    <CmsAppLayout>
+      <DashboardOverview />
+    </CmsAppLayout>
+  );
 }

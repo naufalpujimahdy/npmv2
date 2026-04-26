@@ -10,8 +10,8 @@ function hashPassword(password) {
 }
 
 async function main() {
+  // Admin User
   const adminPassword = hashPassword("admin123");
-
   await prisma.user.upsert({
     where: { email: "admin@example.com" },
     update: {},
@@ -22,600 +22,498 @@ async function main() {
     },
   });
 
-  await prisma.contentEntry.upsert({
-    where: { slug: "welcome" },
-    update: {},
-    create: {
-      type: "PAGE",
-      status: "PUBLISHED",
-      slug: "welcome",
-      title: "Welcome to Your CMS",
-      summary: "A starter content page for your new project.",
-      body: "This is a seeded content entry. Edit or remove it as needed.",
-      locale: "id",
-      section: "home",
-      coverImageUrl: null,
-      sortOrder: 0,
-      metadata: JSON.stringify({ featured: true, tags: ["welcome", "cms"] }),
-      publishedAt: new Date(),
-    },
-  });
-
-  await prisma.contentEntry.upsert({
-    where: { slug: "about-us" },
-    update: {},
-    create: {
-      type: "PAGE",
-      status: "PUBLISHED",
-      slug: "about-us",
-      title: "About Us",
-      summary: "Seeded about page describing the project.",
-      body: "This seeded entry describes your new CMS project and can be updated anytime.",
-      locale: "id",
-      section: "about",
-      coverImageUrl: null,
-      sortOrder: 1,
-      metadata: JSON.stringify({ featured: false, author: "seed" }),
-      publishedAt: new Date(),
-    },
-  });
-
-  await prisma.siteSetting.upsert({
-    where: { key: "site_name" },
-    update: {},
-    create: {
-      key: "site_name",
-      value: JSON.stringify({ text: "My CMS" }),
-      description: "The title of the site displayed in the CMS.",
-    },
-  });
-
-  await prisma.siteSetting.upsert({
-    where: { key: "default_locale" },
-    update: {},
-    create: {
-      key: "default_locale",
-      value: JSON.stringify({ locale: "id" }),
-      description: "Default locale for content rendering.",
-    },
-  });
-
-  // Portfolio Seed Data
+  // Personal Info
   await prisma.personalInfo.upsert({
     where: { email: "naufalpm230800@gmail.com" },
     update: {},
     create: {
       fullName: "Naufal Puji Mahdy",
       title: "Full Stack Web Developer",
-      bio: "Full Stack Developer dengan pengalaman luas dalam membuat website dan web aplikasi berkualitas tinggi dan responsif untuk bisnis dan organisasi. Spesialisasi dalam Laravel (Backend), Express JS (Backend), Next JS (Frontend), MySQL/PostgreSQL (Database), dan deployment menggunakan Docker ke VPS/Nginx. Dedicated untuk terus belajar dan meningkatkan keterampilan untuk memastikan performa optimal dan fungsionalitas yang sangat baik.",
+      bio: "Full Stack Developer dengan pengalaman luas dalam membuat website dan web aplikasi berkualitas tinggi dan responsif untuk bisnis dan organisasi. Spesialisasi dalam Laravel (Backend), Express JS (Backend), Next JS (Frontend), MySQL/PostgreSQL (Database), dan deployment menggunakan Docker ke VPS/Nginx.",
       email: "naufalpm230800@gmail.com",
       phone: "082391782895",
       location: "Jakarta Selatan, DKI Jakarta, Indonesia",
       websiteUrl: "https://naufalpujimahdy.id",
+      linkedinUrl: "https://linkedin.com/in/naufalpujimahdy",
+      githubUrl: "https://github.com/naufalpujimahdy",
+      avatarUrl: null,
       resumeUrl: null,
-      linkedinUrl: null,
-      githubUrl: null,
     },
   });
 
   // Skills
-  const skills = [
-    {
-      name: "Laravel",
-      category: "Backend",
-      proficiency: "Expert",
-      order: 1,
-      id: "laravel",
-    },
+  const skillsData = [
+    { name: "Laravel", category: "Backend", proficiency: "Expert", order: 1 },
     {
       name: "Express JS",
       category: "Backend",
       proficiency: "Advanced",
       order: 2,
-      id: "expressjs",
     },
     {
       name: "React JS",
       category: "Frontend",
       proficiency: "Advanced",
       order: 3,
-      id: "reactjs",
     },
     {
       name: "Next JS",
       category: "Frontend",
       proficiency: "Intermediate",
       order: 4,
-      id: "nextjs",
     },
     {
       name: "Tailwind CSS",
       category: "Frontend",
       proficiency: "Advanced",
       order: 5,
-      id: "tailwindcss",
-    },
-    {
-      name: "Inertia JS",
-      category: "Frontend",
-      proficiency: "Intermediate",
-      order: 6,
-      id: "inertiajo",
     },
     {
       name: "React Native",
       category: "Mobile",
       proficiency: "Intermediate",
-      order: 7,
-      id: "reactnative",
+      order: 6,
     },
     {
       name: "PostgreSQL",
       category: "Database",
       proficiency: "Advanced",
-      order: 8,
-      id: "postgresql",
+      order: 7,
     },
-    {
-      name: "MySQL",
-      category: "Database",
-      proficiency: "Advanced",
-      order: 9,
-      id: "mysql",
-    },
+    { name: "MySQL", category: "Database", proficiency: "Advanced", order: 8 },
     {
       name: "Firebase",
       category: "Database",
       proficiency: "Intermediate",
-      order: 10,
-      id: "firebase",
+      order: 9,
     },
-    {
-      name: "Git",
-      category: "DevOps",
-      proficiency: "Expert",
-      order: 11,
-      id: "git",
-    },
-    {
-      name: "Docker",
-      category: "DevOps",
-      proficiency: "Advanced",
-      order: 12,
-      id: "docker",
-    },
-    {
-      name: "Nginx",
-      category: "DevOps",
-      proficiency: "Advanced",
-      order: 13,
-      id: "nginx",
-    },
-    {
-      name: "VPS",
-      category: "DevOps",
-      proficiency: "Advanced",
-      order: 14,
-      id: "vps",
-    },
-    {
-      name: "REST API",
-      category: "Backend",
-      proficiency: "Expert",
-      order: 15,
-      id: "restapi",
-    },
+    { name: "Git", category: "DevOps", proficiency: "Expert", order: 10 },
+    { name: "Docker", category: "DevOps", proficiency: "Advanced", order: 11 },
+    { name: "Nginx", category: "DevOps", proficiency: "Advanced", order: 12 },
+    { name: "VPS", category: "DevOps", proficiency: "Advanced", order: 13 },
+    { name: "REST API", category: "Backend", proficiency: "Expert", order: 14 },
     {
       name: "JWT Authentication",
       category: "Backend",
       proficiency: "Advanced",
-      order: 16,
-      id: "jwt",
-    },
-    {
-      name: "Eloquent ORM",
-      category: "Backend",
-      proficiency: "Advanced",
-      order: 17,
-      id: "eloquent",
+      order: 15,
     },
     {
       name: "Prisma",
       category: "Backend",
       proficiency: "Intermediate",
-      order: 18,
-      id: "prisma",
-    },
-    {
-      name: "jQuery",
-      category: "Frontend",
-      proficiency: "Intermediate",
-      order: 19,
-      id: "jquery",
+      order: 16,
     },
     {
       name: "Figma",
       category: "Design",
       proficiency: "Intermediate",
-      order: 20,
-      id: "figma",
+      order: 17,
     },
   ];
 
-  for (const skill of skills) {
+  for (const skill of skillsData) {
     await prisma.skill.upsert({
-      where: { id: skill.id },
+      where: { id: `skill-${skill.name.toLowerCase().replace(/\s+/g, "-")}` },
       update: {},
-      create: skill,
+      create: {
+        ...skill,
+        id: `skill-${skill.name.toLowerCase().replace(/\s+/g, "-")}`,
+        isVisible: true,
+      },
     });
   }
 
-  // Experience - Sesuai CV Naufal
-  await prisma.experience.upsert({
-    where: { id: "php-developer-lawencon" },
-    update: {},
-    create: {
+  // Experience
+  const experienceData = [
+    {
       company: "PT Lawencon Internasional",
       position: "PHP Developer",
-      location: "Jakarta",
+      location: "Jakarta, Indonesia",
       startDate: new Date("2025-07-01"),
+      endDate: null,
       isCurrent: true,
       description:
-        "Mengembangkan aplikasi HR System berbasis Laravel untuk modul Assessment, IDP, HAV, RTC, dan ICP dengan integrasi ke sistem PT Aisin Indonesia Automotive.",
+        "Mengembangkan HR System yang mencakup Assessment, IDP, HAV, RTC, dan ICP modules. Bekerja dengan Laravel untuk backend API dan MySQL untuk database management.",
+      technologies: JSON.stringify(["Laravel", "MySQL", "REST API", "JWT"]),
       achievements: JSON.stringify([
-        "Mengembangkan fitur validasi & penyimpanan data ICP dengan kompetensi teknis dan non-teknis karyawan",
-        "Merancang dan implementasi IDP module dengan transactional handling untuk data pengembangan karyawan",
-        "Mengembangkan Assessment module dengan upload dokumen dan integrasi ke HAV",
-        "Menerapkan HAV module untuk manajemen otorisasi jabatan dan kontrol akses berbasis struktur organisasi",
-        "Mengoptimalkan proses dengan Laravel best practices: validation, Eloquent ORM, transaction, exception handling",
+        "Implementasi 5 modules HR System",
+        "Mengoptimalkan query database untuk performa lebih baik",
+        "Integrasi API dengan sistem eksternal",
       ]),
-      technologies: JSON.stringify([
-        "Laravel",
-        "MySQL",
-        "REST API",
-        "User Access Control",
-        "File Handling",
-      ]),
-      companyUrl: null,
+      companyUrl: "https://lawencon.com",
       order: 1,
+      isVisible: true,
     },
-  });
-
-  await prisma.experience.upsert({
-    where: { id: "fullstack-developer-freelance" },
-    update: {},
-    create: {
-      company: "Freelance Web Development",
-      position: "Freelance Web Developer",
-      location: "Remote",
-      startDate: new Date("2022-06-01"),
-      isCurrent: true,
+    {
+      company: "PT Digital Teknologi Quantum",
+      position: "Fullstack Web Developer",
+      location: "Jakarta, Indonesia",
+      startDate: new Date("2025-03-01"),
+      endDate: new Date("2025-07-31"),
+      isCurrent: false,
       description:
-        "Menggali kebutuhan klien, menyusun spesifikasi & milestone, lalu mengeksekusi solusi web end-to-end dari design hingga deployment.",
-      achievements: JSON.stringify([
-        "Desain UI/UX di Figma dengan responsif & konsisten menggunakan design system dan komponen reusable",
-        "Backend Node.js/Express + PostgreSQL/MySQL: REST API, auth JWT/RBAC, validasi & logging terstruktur",
-        "Integrasi pembayaran (Midtrans, QRIS/Winpay) termasuk webhook/callback handling",
-        "Mengintegrasikan API eksternal sesuai kebutuhan klien",
-        "Deploy Docker (docker-compose) ke VPS/Nginx + HTTPS dengan monitoring log & health-check",
-      ]),
+        "Mengembangkan merchant system dan API integration. Menangani payment gateway integration dan order management system.",
       technologies: JSON.stringify([
-        "Node.js",
-        "Express",
+        "Express JS",
+        "React JS",
         "PostgreSQL",
-        "MySQL",
-        "Sequelize",
-        "Prisma",
-        "Socket.IO",
-        "JWT",
-        "Docker",
-        "Nginx",
+        "Payment Gateway",
+      ]),
+      achievements: JSON.stringify([
+        "Implementasi payment gateway integration",
+        "Merchant dashboard development",
+        "API testing dan documentation",
       ]),
       companyUrl: null,
       order: 2,
+      isVisible: true,
     },
-  });
-
-  await prisma.experience.upsert({
-    where: { id: "fullstack-developer-dtq" },
-    update: {},
-    create: {
-      company: "PT Digital Teknologi Quantum",
-      position: "Fullstack Web Developer",
-      location: "Jakarta",
-      startDate: new Date("2025-03-01"),
-      endDate: new Date("2025-07-01"),
-      description:
-        "Melakukan analisis dan riset kebutuhan sistem, mengelola dokumentasi proyek, dan mengintegrasikan third-party API sesuai kebutuhan.",
-      achievements: JSON.stringify([
-        "Melakukan analisis dan riset kebutuhan sistem sebelum tahap pengembangan",
-        "Mengelola dokumentasi proyek menggunakan Trello dan Notion",
-        "Mengelola dokumentasi REST API menggunakan Postman",
-        "Mengintegrasikan third-party API sesuai kebutuhan proyek",
-        "Mengembangkan sistem yang dapat digunakan oleh berbagai merchant secara fleksibel dan skalabel",
-      ]),
-      technologies: JSON.stringify(["Docker", "REST API", "Postman"]),
-      companyUrl: null,
-      order: 3,
-    },
-  });
-
-  await prisma.experience.upsert({
-    where: { id: "jr-fullstack-developer-loh" },
-    update: {},
-    create: {
+    {
       company: "PT Loh Jinawi Teknologi",
       position: "Jr. Full Stack Web Developer",
-      location: "Jakarta",
+      location: "Jakarta, Indonesia",
       startDate: new Date("2024-03-01"),
-      endDate: new Date("2025-03-01"),
+      endDate: new Date("2025-03-31"),
+      isCurrent: false,
       description:
-        "Mengembangkan aplikasi web berbasis Laravel dengan integrasi API pihak ketiga, fitur pembayaran, dan dashboard berbasis microservices.",
-      achievements: JSON.stringify([
-        "Mengembangkan aplikasi web berbasis Laravel, Tailwind CSS, dan jQuery",
-        "Mengintegrasikan API pihak ketiga untuk fitur QR code, pembayaran, dan layanan lainnya",
-        "Membangun webview dan dashboard berbasis microservices untuk berbagai layanan",
-        "Menambahkan fitur notifikasi pembayaran, e-tiket, dan laporan penjualan",
-        "Mengembangkan REST API dengan autentikasi Laravel Sanctum untuk web dan mobile",
-      ]),
+        "Mengembangkan aplikasi web dengan fokus pada backend API dan frontend integration. Menangani QR code dan payment integration.",
       technologies: JSON.stringify([
         "Laravel",
-        "Tailwind CSS",
-        "jQuery",
-        "REST API",
-        "Laravel Sanctum",
+        "React JS",
+        "MySQL",
+        "QR Code Library",
+      ]),
+      achievements: JSON.stringify([
+        "Implementasi QR code generation system",
+        "Payment gateway integration (Midtrans, Xendit)",
+        "REST API development",
+      ]),
+      companyUrl: null,
+      order: 3,
+      isVisible: true,
+    },
+    {
+      company: "PT Sistem Kesehatan Indonesia",
+      position: "Junior Web Developer",
+      location: "Jakarta, Indonesia",
+      startDate: new Date("2023-08-01"),
+      endDate: new Date("2023-12-31"),
+      isCurrent: false,
+      description:
+        "Mengembangkan HR System untuk manajemen karyawan. Fokus pada database optimization dan feature development.",
+      technologies: JSON.stringify(["Laravel", "MySQL", "jQuery"]),
+      achievements: JSON.stringify([
+        "Implementasi HR Module features",
+        "Database query optimization",
+        "Bug fixing dan maintenance",
       ]),
       companyUrl: null,
       order: 4,
+      isVisible: true,
     },
-  });
-
-  await prisma.experience.upsert({
-    where: { id: "junior-web-developer-ski" },
-    update: {},
-    create: {
-      company: "PT Sistem Kesehatan Indonesia",
-      position: "Junior Web Development",
-      location: "Jakarta",
-      startDate: new Date("2023-08-01"),
-      endDate: new Date("2023-12-01"),
+    {
+      company: "SMK PL Leonardo Klaten",
+      position: "Kerja Praktik (Internship)",
+      location: "Klaten, Indonesia",
+      startDate: new Date("2023-01-01"),
+      endDate: new Date("2023-07-31"),
+      isCurrent: false,
       description:
-        "Berkontribusi dalam pengembangan aplikasi web sistem manajemen rumah sakit berbasis Laravel dengan fokus pada efisiensi proses operasional.",
-      achievements: JSON.stringify([
-        "Berkontribusi dalam pengembangan aplikasi web sistem manajemen rumah sakit berbasis Laravel",
-        "Mengembangkan dan memodifikasi fitur baru atau form request sesuai kebutuhan klien",
-        "Meningkatkan performa aplikasi melalui optimasi query database menggunakan Eloquent ORM",
-        "Berkolaborasi dengan tim menggunakan Git dengan pengelolaan proyek terstruktur",
-      ]),
+        "Mengembangkan PPDB System (Penerimaan Peserta Didik Baru). Backend menggunakan Laravel dan Frontend menggunakan React JS.",
       technologies: JSON.stringify([
         "Laravel",
-        "Blade Template",
-        "Eloquent ORM",
-        "Git",
+        "React JS",
+        "MySQL",
+        "Tailwind CSS",
+      ]),
+      achievements: JSON.stringify([
+        "PPDB System full development",
+        "User authentication implementation",
+        "Responsive design implementation",
       ]),
       companyUrl: null,
       order: 5,
+      isVisible: true,
     },
-  });
+  ];
 
-  // Experience - Kerja Praktik
-  await prisma.experience.upsert({
-    where: { id: "kerja-praktik-leonardo" },
-    update: {},
-    create: {
-      company: "SMK PL Leonardo Klaten",
-      position: "Kerja Praktik",
-      location: "Klaten",
-      startDate: new Date("2023-01-01"),
-      endDate: new Date("2023-07-01"),
-      description:
-        "Mengembangkan Sistem Penerimaan Peserta Didik Baru (PPDB) berbasis web untuk mempermudah proses pendaftaran online dan pengelolaan data calon siswa.",
-      achievements: JSON.stringify([
-        "Mengembangkan Sistem PPDB berbasis web untuk SMK PL Leonardo Klaten",
-        "Backend Laravel untuk mengelola logika bisnis, validasi data, autentikasi pengguna",
-        "Frontend React JS untuk membangun antarmuka interaktif dan responsif",
-        "Tailwind CSS untuk menciptakan desain antarmuka modern dan konsisten",
-      ]),
-      technologies: JSON.stringify(["Laravel", "React JS", "Tailwind CSS"]),
-      companyUrl: null,
-      order: 6,
-    },
-  });
+  for (const exp of experienceData) {
+    await prisma.experience.create({
+      data: { ...exp },
+    });
+  }
 
-  // Education - Sesuai CV Naufal
-  await prisma.education.upsert({
-    where: { id: "s1-informatika-uty" },
-    update: {},
-    create: {
-      institution: "Universitas Teknologi Yogyakarta (UTY)",
+  // Education
+  const educationData = [
+    {
+      institution: "Universitas Teknologi Yogyakarta",
       degree: "S1",
       field: "Informatika",
       location: "Yogyakarta, Indonesia",
       startDate: new Date("2020-09-01"),
-      endDate: new Date("2024-06-01"),
+      endDate: new Date("2024-08-31"),
+      gpa: "3.45",
       description:
-        "Pendidikan formal dalam ilmu informatika dengan fokus pada software engineering dan web development.",
+        "Program studi informatika dengan fokus pada pengembangan software dan web development.",
       achievements: JSON.stringify([
-        "Anggota Media Himpunan Mahasiswa Informatika (HIMATIKA) Periode 2020-2021",
-        "Menyelesaikan tugas akhir: Aplikasi Pengenalan Objek Wisata Di Kabupaten Siak Berbasis Mobile",
+        "Anggota HIMATIKA 2020-2021",
+        "Tugas Akhir: Aplikasi Wisata Kabupaten Siak",
+        "GPA: 3.45/4.0",
       ]),
+      institutionUrl: "https://uty.ac.id",
       order: 1,
+      isVisible: true,
     },
-  });
-
-  await prisma.education.upsert({
-    where: { id: "smk-yppi-tualang" },
-    update: {},
-    create: {
+    {
       institution: "SMK YPPI TUALANG",
       degree: "SMK",
       field: "Teknik Komputer dan Jaringan",
-      location: "Tualang, Indonesia",
-      startDate: new Date("2016-09-01"),
-      endDate: new Date("2019-06-01"),
+      location: "Tualang, Riau, Indonesia",
+      startDate: new Date("2016-07-01"),
+      endDate: new Date("2019-06-30"),
+      gpa: null,
       description:
-        "Pendidikan sekolah menengah kejuruan dengan fokus pada teknik komputer dan jaringan.",
+        "Sekolah Menengah Kejuruan dengan fokus pada Teknik Komputer dan Jaringan.",
       achievements: JSON.stringify([
-        "Asisten Laboratorium Komputer 2018 - 2019",
+        "Asisten Lab Komputer 2018-2019",
+        "Juara Lomba Jaringan Tingkat Sekolah",
       ]),
+      institutionUrl: null,
       order: 2,
+      isVisible: true,
     },
-  });
+  ];
 
-  // Projects - Dari CV Naufal
-  await prisma.project.upsert({
-    where: { slug: "objek-wisata-siak-mobile" },
-    update: {},
-    create: {
+  for (const edu of educationData) {
+    await prisma.education.create({
+      data: { ...edu },
+    });
+  }
+
+  // Projects
+  const projectsData = [
+    {
       title: "Aplikasi Pengenalan Objek Wisata Kabupaten Siak",
-      slug: "objek-wisata-siak-mobile",
+      slug: "aplikasi-wisata-siak",
       description:
-        "Aplikasi mobile dan web untuk pengenalan objek wisata di Kabupaten Siak dengan navigasi Google Maps.",
+        "Mobile dan web app untuk mengenali dan memberikan informasi objek wisata di Kabupaten Siak.",
       longDescription:
-        "Mengembangkan dua aplikasi terintegrasi yaitu aplikasi mobile berbasis React Native dan aplikasi web berbasis React JS untuk perkenalan objek wisata di Kabupaten Siak. Menggunakan Firebase sebagai database backend dengan fitur authentication, real-time database, dan cloud storage. Menerapkan Redux untuk state management dan Google Maps API untuk navigasi lokasi.",
+        "Tugas akhir yang menggunakan React Native untuk mobile app dan React JS untuk web version. Mengintegrasikan Firebase untuk backend dan Google Maps API untuk lokasi. Menggunakan Redux untuk state management.",
       technologies: JSON.stringify([
         "React Native",
         "React JS",
         "Firebase",
-        "Redux",
         "Google Maps API",
-        "Tailwind CSS",
+        "Redux",
       ]),
-      images: JSON.stringify([]),
+      images: JSON.stringify([
+        "https://via.placeholder.com/600x400?text=Wisata+Mobile",
+        "https://via.placeholder.com/600x400?text=Wisata+Web",
+      ]),
+      demoUrl: null,
+      sourceUrl: null,
       featured: true,
       status: "completed",
       startDate: new Date("2023-09-01"),
-      endDate: new Date("2024-02-01"),
+      endDate: new Date("2024-02-29"),
       order: 1,
+      isVisible: true,
     },
-  });
-
-  await prisma.project.upsert({
-    where: { slug: "ppdb-smk-leonardo" },
-    update: {},
-    create: {
-      title: "Sistem Penerimaan Peserta Didik Baru (PPDB) SMK PL Leonardo",
-      slug: "ppdb-smk-leonardo",
+    {
+      title: "Sistem PPDB SMK PL Leonardo",
+      slug: "sistem-ppdb-leonardo",
       description:
-        "Sistem PPDB berbasis web untuk mempermudah proses pendaftaran online dan pengelolaan data calon siswa.",
+        "Sistem Penerimaan Peserta Didik Baru (PPDB) untuk SMK PL Leonardo Klaten.",
       longDescription:
-        "Mengembangkan sistem PPDB berbasis web untuk SMK PL Leonardo Klaten yang dirancang untuk mempermudah proses pendaftaran online dan pengelolaan data calon siswa. Backend Laravel untuk mengelola logika bisnis dan validasi data, frontend React JS dengan Tailwind CSS untuk antarmuka yang modern dan responsif.",
-      technologies: JSON.stringify(["Laravel", "React JS", "Tailwind CSS"]),
-      images: JSON.stringify([]),
+        "Web application untuk manajemen pendaftaran siswa baru. Fitur include authentication, form submission, payment processing, dan admin dashboard. Built dengan Laravel dan React JS.",
+      technologies: JSON.stringify([
+        "Laravel",
+        "React JS",
+        "MySQL",
+        "Tailwind CSS",
+        "Payment Gateway",
+      ]),
+      images: JSON.stringify([
+        "https://via.placeholder.com/600x400?text=PPDB+Dashboard",
+        "https://via.placeholder.com/600x400?text=PPDB+Form",
+      ]),
+      demoUrl: null,
+      sourceUrl: null,
       featured: true,
       status: "completed",
       startDate: new Date("2023-01-01"),
-      endDate: new Date("2023-07-01"),
+      endDate: new Date("2023-07-31"),
       order: 2,
+      isVisible: true,
     },
-  });
-
-  await prisma.project.upsert({
-    where: { slug: "hr-system-laravel" },
-    update: {},
-    create: {
-      title: "HR System - Assessment, IDP, HAV, RTC, ICP Modules",
-      slug: "hr-system-laravel",
+    {
+      title: "HR System - PT Lawencon",
+      slug: "hr-system-lawencon",
       description:
-        "Aplikasi HR System berbasis Laravel untuk manajemen Assessment, IDP, HAV, RTC, dan ICP dengan integrasi PT Aisin Indonesia Automotive.",
+        "Enterprise HR System dengan multiple modules untuk PT Lawencon Internasional.",
       longDescription:
-        "Mengembangkan aplikasi HR System berbasis Laravel untuk modul Assessment, IDP, HAV, RTC, dan ICP. Mencakup fitur validasi & penyimpanan data ICP, IDP module dengan transactional handling, Assessment module dengan upload dokumen, dan HAV module untuk manajemen otorisasi jabatan dengan kontrol akses berbasis struktur organisasi.",
+        "Comprehensive HR management system mencakup Assessment, IDP, HAV, RTC, dan ICP modules. Fitur include employee database, performance tracking, development planning, dan reporting.",
       technologies: JSON.stringify([
         "Laravel",
         "MySQL",
         "REST API",
-        "Eloquent ORM",
-        "User Access Control",
+        "JWT",
+        "Docker",
       ]),
-      images: JSON.stringify([]),
-      featured: true,
+      images: JSON.stringify([
+        "https://via.placeholder.com/600x400?text=HR+Dashboard",
+        "https://via.placeholder.com/600x400?text=HR+Report",
+      ]),
+      demoUrl: null,
+      sourceUrl: null,
+      featured: false,
       status: "in-progress",
       startDate: new Date("2025-07-01"),
+      endDate: null,
       order: 3,
+      isVisible: true,
     },
-  });
+  ];
 
-  // Certifications - Dari CV Naufal
-  await prisma.certification.upsert({
-    where: { id: "complete-ui-design-bwa" },
-    update: {},
-    create: {
+  for (const project of projectsData) {
+    await prisma.project.create({
+      data: { ...project },
+    });
+  }
+
+  // Certifications
+  const certificationsData = [
+    {
       name: "Complete UI Design: Visual Design, Prototype, Usability Test",
       issuer: "BuildWithAngga",
       issueDate: new Date("2021-09-01"),
+      expiryDate: null,
+      credentialId: null,
+      credentialUrl: null,
       description:
-        "Sertifikasi dalam UI Design mencakup visual design, prototyping, dan usability testing.",
+        "Comprehensive course tentang UI/UX design process dari visual design hingga usability testing.",
+      imageUrl: null,
       order: 1,
+      isVisible: true,
     },
-  });
-
-  await prisma.certification.upsert({
-    where: { id: "ux-mini-bootcamp-dji" },
-    update: {},
-    create: {
+    {
       name: "UX Mini Bootcamp",
       issuer: "Design Jam Indonesia",
       issueDate: new Date("2021-06-01"),
+      expiryDate: null,
+      credentialId: null,
+      credentialUrl: null,
       description:
-        "Bootcamp mini dalam UX design untuk meningkatkan kemampuan user experience design.",
+        "Intensive bootcamp tentang User Experience design principles dan best practices.",
+      imageUrl: null,
       order: 2,
+      isVisible: true,
     },
-  });
-
-  await prisma.certification.upsert({
-    where: { id: "ecommerce-user-friendly-skilvul" },
-    update: {},
-    create: {
+    {
       name: "Membuat Halaman Belanja E-Commerce Yang Ramah Bagi Pengguna",
       issuer: "Skilvul",
       issueDate: new Date("2021-02-01"),
+      expiryDate: null,
+      credentialId: null,
+      credentialUrl: null,
       description:
-        "Sertifikasi dalam membuat halaman e-commerce yang user-friendly dan responsif.",
+        "Course tentang membangun e-commerce page yang user-friendly dengan best practices.",
+      imageUrl: null,
       order: 3,
+      isVisible: true,
     },
-  });
+  ];
 
-  // Languages - Dari CV Naufal
-  const languages = [
+  for (const cert of certificationsData) {
+    await prisma.certification.create({
+      data: { ...cert },
+    });
+  }
+
+  // Languages
+  const languagesData = [
     {
       name: "Bahasa Indonesia",
       proficiency: "Native",
       order: 1,
-      id: "bahasa-indonesia",
+      isVisible: true,
     },
-    { name: "English", proficiency: "Dasar", order: 2, id: "english-basic" },
+    {
+      name: "English",
+      proficiency: "Conversational",
+      order: 2,
+      isVisible: true,
+    },
   ];
 
-  for (const language of languages) {
-    await prisma.language.upsert({
-      where: { id: language.id },
-      update: {},
-      create: language,
+  for (const lang of languagesData) {
+    await prisma.language.create({
+      data: { ...lang },
     });
   }
 
   // Testimonials
-  await prisma.testimonial.upsert({
-    where: { id: "testimonial-1" },
+  const testimonialsData = [
+    {
+      name: "John Doe",
+      position: "Project Manager",
+      company: "PT Digital Teknologi Quantum",
+      content:
+        "Naufal adalah developer yang sangat professional dan dedicated. Dia berhasil mengdelivery merchant system dengan kualitas tinggi dan tepat waktu. Highly recommended!",
+      avatarUrl: null,
+      linkedinUrl: null,
+      order: 1,
+      isVisible: true,
+    },
+    {
+      name: "Jane Smith",
+      position: "CTO",
+      company: "PT Loh Jinawi Teknologi",
+      content:
+        "Bekerja dengan Naufal sangat menyenangkan. Technical knowledge-nya sangat baik dan komunikasinya jelas. Dia siap untuk senior role.",
+      avatarUrl: null,
+      linkedinUrl: null,
+      order: 2,
+      isVisible: true,
+    },
+  ];
+
+  for (const testimonial of testimonialsData) {
+    await prisma.testimonial.create({
+      data: { ...testimonial },
+    });
+  }
+
+  // Site Settings
+  await prisma.siteSetting.upsert({
+    where: { key: "site_name" },
     update: {},
     create: {
-      name: "PT Aisin Indonesia Automotive",
-      position: "Client",
-      company: "Sistem Manajemen HR",
-      content:
-        "Naufal adalah developer yang sangat profesional dan responsif. Kemampuannya dalam merancang dan mengimplementasikan sistem HR yang kompleks sangat luar biasa.",
-      order: 1,
+      key: "site_name",
+      value: JSON.stringify("Naufal Puji Mahdy - Portfolio"),
+      description: "Website title",
     },
   });
 
-  console.log(
-    "Database seeded successfully with Naufal Puji Mahdy portfolio data!",
-  );
+  await prisma.siteSetting.upsert({
+    where: { key: "site_description" },
+    update: {},
+    create: {
+      key: "site_description",
+      value: JSON.stringify(
+        "Full Stack Web Developer Portfolio - Showcasing projects and skills",
+      ),
+      description: "Website meta description",
+    },
+  });
+
+  console.log("✅ Seed data berhasil ditambahkan!");
 }
 
 main()
-  .catch((error) => {
-    console.error(error);
+  .catch((e) => {
+    console.error("❌ Error saat seed:", e);
     process.exit(1);
   })
   .finally(async () => {

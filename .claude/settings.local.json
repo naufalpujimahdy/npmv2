@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx shadcn@latest add button card input badge separator skeleton table tabs avatar label textarea select checkbox switch dialog alert-dialog sonner --yes --overwrite)",
+      "Bash(pnpm add *)",
+      "Bash(npx tsc *)",
+      "Bash(pnpm next *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git rm *)",
+      "Bash(npm install *)"
+    ]
+  }
+}

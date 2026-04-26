@@ -1,26 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/src/lib/prisma";
-import { withErrorHandling } from "@/src/lib/error-handler";
-import { corsHeaders } from "@/src/lib/cors";
+import { NextRequest } from 'next/server';
+import prisma from '@/src/lib/prisma';
+import { withErrorHandling, requireApiKey } from '@/src/lib/error-handler';
+import { languageSchema } from '@/src/modules/portfolio/validation';
 
-async function getLanguages(request: NextRequest) {
-  const languages = await prisma.language.findMany({
-    where: { isVisible: true },
-    orderBy: { order: "asc" },
+export async function GET(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    const includeHidden = new URL(request.url).searchParams.get('include_hidden') === 'true';
+    const languages = await prisma.language.findMany({
+      where: includeHidden ? {} : { isVisible: true },
+      orderBy: { order: 'asc' },
+    });
+    return [languages, { status: 200 }];
   });
-
-  return NextResponse.json({ ok: true, data: languages }, { headers: corsHeaders(request) });
 }
 
-async function createLanguage(request: NextRequest) {
-  const body = await request.json();
-
-  const language = await prisma.language.create({
-    data: body,
+export async function POST(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    requireApiKey(request);
+    const body = await request.json();
+    const validated = languageSchema.parse(body);
+    const language = await prisma.language.create({ data: validated });
+    return [language, { status: 201 }];
   });
-
-  return NextResponse.json({ ok: true, data: language }, { status: 201, headers: corsHeaders(request) });
 }
-
-export const GET = withErrorHandling(getLanguages);
-export const POST = withErrorHandling(createLanguage);

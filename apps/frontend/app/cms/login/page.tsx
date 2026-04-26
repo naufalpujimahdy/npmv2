@@ -1,4 +1,4 @@
-import LoginForm from './LoginForm';
+import LoginForm from "@/modules/auth/LoginForm";
 
 export default function CmsLoginPage() {
   return (

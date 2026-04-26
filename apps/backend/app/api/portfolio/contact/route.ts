@@ -1,25 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/src/lib/prisma";
-import { withErrorHandling } from "@/src/lib/error-handler";
-import { corsHeaders } from "@/src/lib/cors";
+import { NextRequest } from 'next/server';
+import prisma from '@/src/lib/prisma';
+import { withErrorHandling } from '@/src/lib/error-handler';
+import { contactMessageSchema } from '@/src/modules/portfolio/validation';
 
-async function getContactMessages(request: NextRequest) {
-  const messages = await prisma.contactMessage.findMany({
-    orderBy: { createdAt: "desc" },
+export async function GET(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    const messages = await prisma.contactMessage.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 100,
+    });
+    return [messages, { status: 200 }];
   });
-
-  return NextResponse.json({ ok: true, data: messages }, { headers: corsHeaders(request) });
 }
 
-async function createContactMessage(request: NextRequest) {
-  const body = await request.json();
-
-  const message = await prisma.contactMessage.create({
-    data: body,
+export async function POST(request: NextRequest) {
+  return withErrorHandling(request, async () => {
+    const body = await request.json();
+    const validated = contactMessageSchema.parse(body);
+    const message = await prisma.contactMessage.create({ data: validated });
+    return [message, { status: 201 }];
   });
-
-  return NextResponse.json({ ok: true, data: message }, { status: 201, headers: corsHeaders(request) });
 }
-
-export const GET = withErrorHandling(getContactMessages);
-export const POST = withErrorHandling(createContactMessage);
