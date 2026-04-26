@@ -7,18 +7,18 @@ export const personalInfoSchema = z.object({
   email: z.string().email('Invalid email'),
   phone: z.string().optional().nullable(),
   location: z.string().optional().nullable(),
-  avatarUrl: z.string().url().optional().nullable(),
-  resumeUrl: z.string().url().optional().nullable(),
-  linkedinUrl: z.string().url().optional().nullable(),
-  githubUrl: z.string().url().optional().nullable(),
-  websiteUrl: z.string().url().optional().nullable(),
+  avatarUrl: z.string().url().or(z.literal('')).optional().nullable(),
+  resumeUrl: z.string().url().or(z.literal('')).optional().nullable(),
+  linkedinUrl: z.string().url().or(z.literal('')).optional().nullable(),
+  githubUrl: z.string().url().or(z.literal('')).optional().nullable(),
+  websiteUrl: z.string().url().or(z.literal('')).optional().nullable(),
 });
 
 export const skillSchema = z.object({
   name: z.string().min(1, 'Skill name is required').trim(),
   category: z.string().min(1, 'Category is required').trim(),
   proficiency: z.enum(['Expert', 'Advanced', 'Intermediate', 'Beginner']),
-  iconUrl: z.string().url().optional().nullable(),
+  iconUrl: z.string().url().or(z.literal('')).optional().nullable(),
   order: z.number().int().default(0),
   isVisible: z.boolean().default(true),
 });
@@ -95,8 +95,8 @@ export const testimonialSchema = z.object({
   position: z.string().min(1, 'Position is required').trim(),
   company: z.string().min(1, 'Company is required').trim(),
   content: z.string().min(1, 'Content is required').trim(),
-  avatarUrl: z.string().url().optional().nullable(),
-  linkedinUrl: z.string().url().optional().nullable(),
+  avatarUrl: z.string().url().or(z.literal('')).optional().nullable(),
+  linkedinUrl: z.string().url().or(z.literal('')).optional().nullable(),
   isVisible: z.boolean().default(true),
   order: z.number().int().default(0),
 });
