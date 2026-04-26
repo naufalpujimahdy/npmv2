@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { getPersonalInfo, getSkills, getExperience, getProjects } from '@/lib/portfolio-api';
 
-const fadeUp    = { hidden: { opacity: 0, y: 24 }, visible: (d = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: d } }) };
-const slideLeft  = { hidden: { opacity: 0, x: -32 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } } };
-const slideRight = { hidden: { opacity: 0, x:  32 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } } };
+const EASE = [0.22, 1, 0.36, 1] as const;
+const fadeUp    = { hidden: { opacity: 0, y: 24 }, visible: (d = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE, delay: d } }) };
+const slideLeft  = { hidden: { opacity: 0, x: -32 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: EASE } } };
+const slideRight = { hidden: { opacity: 0, x:  32 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: EASE } } };
 const stagger    = { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } };
-const pillVar    = { hidden: { opacity: 0, scale: 0.85 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.3, ease: 'backOut' } } };
+const pillVar    = { hidden: { opacity: 0, scale: 0.85 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.3, ease: 'backOut' as const } } };
 
 const W = 'max-w-2xl mx-auto px-5';
 

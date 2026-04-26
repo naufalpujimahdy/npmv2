@@ -4,9 +4,7 @@ import { withErrorHandling } from '@/src/lib/error-handler';
 
 export async function GET(request: NextRequest) {
   return withErrorHandling(request, async () => {
-    const settings = await prisma.siteSetting.findMany({
-      where: { category: { in: ['general', 'seo', 'social', 'contact'] } },
-    });
+    const settings = await prisma.siteSetting.findMany();
 
     const settingsObj: Record<string, unknown> = {};
     for (const s of settings) {
@@ -33,7 +31,6 @@ export async function PUT(request: NextRequest) {
           create: {
             key,
             value: typeof value === 'string' ? value : JSON.stringify(value),
-            category: 'general',
           },
         })
       )
