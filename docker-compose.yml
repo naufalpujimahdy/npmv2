@@ -65,7 +65,7 @@ services:
       context: .
       dockerfile: apps/frontend/Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: https://naufalpujimahdy.id/api
+        NEXT_PUBLIC_API_URL: https://naufalpujimahdy.id
         NEXT_PUBLIC_API_KEY: ${ADMIN_API_KEY}
     container_name: portfolio-frontend
     restart: unless-stopped
