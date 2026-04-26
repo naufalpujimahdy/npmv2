@@ -36,7 +36,10 @@ services:
       NODE_ENV: production
       DATABASE_URL: mysql://${DB_USER:-portfolio_user}:${DB_PASSWORD:-portfolio_pass123}@db:3306/${DB_NAME:-portfolio_db}
       NEXT_PUBLIC_API_URL: https://naufalpujimahdy.id/api
-      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-this}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_API_KEY: ${ADMIN_API_KEY}
+      ALLOWED_ORIGINS: https://naufalpujimahdy.id
+      BASE_URL: https://naufalpujimahdy.id/api
       PORT: 3000
     # Bagian PORTS dihapus agar tidak bentrok, Caddy akan akses via network internal
     networks:
