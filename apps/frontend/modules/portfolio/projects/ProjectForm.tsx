@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/dialog';
 import { useCmsApi } from '@/hooks/useCmsApi';
 import { MultiImageUpload } from '@/components/ui/image-upload';
+import { SkillMultiSelect } from '@/components/ui/skill-multi-select';
 
 interface Project {
   id?: string;
@@ -147,8 +148,11 @@ export function ProjectForm({ project, onClose, onSuccess }: ProjectFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="technologies">Teknologi (dipisahkan koma) *</Label>
-            <Textarea id="technologies" value={formData.technologies} onChange={(e) => handleChange('technologies', e.target.value)} rows={2} required />
+            <Label>Teknologi *</Label>
+            <SkillMultiSelect
+              value={formData.technologies || ''}
+              onChange={(val) => handleChange('technologies', val)}
+            />
           </div>
 
           <div className="space-y-2">

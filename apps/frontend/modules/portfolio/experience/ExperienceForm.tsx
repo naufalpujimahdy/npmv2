@@ -17,6 +17,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { useCmsApi } from '@/hooks/useCmsApi';
+import { SkillMultiSelect } from '@/components/ui/skill-multi-select';
 
 interface Experience {
   id?: string;
@@ -152,8 +153,11 @@ export function ExperienceForm({ experience, onClose, onSuccess }: ExperienceFor
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="technologies">Teknologi (dipisahkan koma)</Label>
-            <Textarea id="technologies" value={formData.technologies || ''} onChange={(e) => handleChange('technologies', e.target.value)} rows={2} />
+            <Label>Teknologi</Label>
+            <SkillMultiSelect
+              value={formData.technologies || ''}
+              onChange={(val) => handleChange('technologies', val)}
+            />
           </div>
 
           <div className="flex items-center gap-2">
