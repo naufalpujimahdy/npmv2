@@ -1,31 +1,28 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getPersonalInfo, getSkills, getExperience, getEducation, getProjects } from '@/lib/portfolio-api';
+import { getPersonalInfo, getSkills, getExperience, getProjects } from '@/lib/portfolio-api';
 
 export default function PortfolioHome() {
   const [personal, setPersonal] = useState<any>(null);
   const [skills, setSkills] = useState<any[]>([]);
   const [experience, setExperience] = useState<any[]>([]);
-  const [education, setEducation] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [personalData, skillsData, expData, eduData, projectsData] = await Promise.all([
+        const [personalData, skillsData, expData, projectsData] = await Promise.all([
           getPersonalInfo(),
           getSkills(),
           getExperience(),
-          getEducation(),
           getProjects(),
         ]);
 
         setPersonal(personalData);
         setSkills(skillsData);
         setExperience(expData);
-        setEducation(eduData);
         setProjects(projectsData);
       } catch (error) {
         console.error('Error loading portfolio data:', error);
@@ -50,7 +47,7 @@ export default function PortfolioHome() {
   }, {});
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+    <main className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
       {/* Hero Section */}
       <section className="px-4 py-20 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="text-center mb-12">
@@ -124,7 +121,7 @@ export default function PortfolioHome() {
               <p className="text-slate-300 mb-4">{exp.description}</p>
               {exp.technologies && (
                 <div className="flex flex-wrap gap-2">
-                  {JSON.parse(exp.technologies).map((tech: string, idx: number) => (
+                  {exp.technologies.split(',').map((tech: string, idx: number) => (
                     <span key={idx} className="px-3 py-1 bg-slate-600 text-slate-200 rounded text-xs">
                       {tech}
                     </span>
