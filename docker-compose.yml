@@ -15,7 +15,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     networks:
-      - portfolio-network
+      - portfolio-network # Tetap di internal network untuk keamanan DB
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
@@ -38,10 +38,10 @@ services:
       NEXT_PUBLIC_API_URL: https://naufalpujimahdy.id/api
       JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-this}
       PORT: 3000
-    ports:
-      - "3000:3000"
+    # Bagian PORTS dihapus agar tidak bentrok, Caddy akan akses via network internal
     networks:
       - portfolio-network
+      - global-proxy-net # Terhubung ke Caddy Global
     healthcheck:
       test:
         [
@@ -69,10 +69,10 @@ services:
       NODE_ENV: production
       NEXT_PUBLIC_API_URL: https://naufalpujimahdy.id/api
       PORT: 3001
-    ports:
-      - "3001:3001"
+    # Bagian PORTS dihapus
     networks:
       - portfolio-network
+      - global-proxy-net # Terhubung ke Caddy Global
     healthcheck:
       test:
         [
@@ -87,34 +87,16 @@ services:
       retries: 5
       interval: 30s
 
-  # Caddy Reverse Proxy
-  caddy:
-    image: caddy:2-alpine
-    container_name: portfolio-caddy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-    networks:
-      - portfolio-network
-    depends_on:
-      - frontend
-      - backend
-    environment:
-      DOMAIN: ${DOMAIN:-naufalpujimahdy.id}
+  # SERVICE CADDY DI SINI DIHAPUS TOTAL
 
 volumes:
   db_data:
     driver: local
-  caddy_data:
-    driver: local
-  caddy_config:
-    driver: local
 
 networks:
+  # Network internal untuk komunikasi Backend <-> DB
   portfolio-network:
     driver: bridge
+  # Network eksternal untuk komunikasi ke Caddy Global
+  global-proxy-net:
+    external: true
