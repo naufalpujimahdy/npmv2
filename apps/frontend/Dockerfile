@@ -38,7 +38,6 @@ RUN pnpm install --prod --frozen-lockfile
 
 # Copy built application
 COPY --from=builder /app/apps/frontend/.next ./apps/frontend/.next
-COPY --from=builder /app/apps/frontend/public ./apps/frontend/public
 COPY --from=builder /app/apps/frontend/next.config.js ./apps/frontend/
 
 EXPOSE 3001
